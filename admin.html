@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eiverr | Ethiopian Freelance Talent</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<style>
+/* ══════════════════════════════════════════
+   TOKENS
+══════════════════════════════════════════ */
+:root{
+  --green:#006b3f;
+  --green-d:#004d2c;
+  --gold:#fcd116;
+  --red:#ce1126;
+  --white:#fff;
+  --bg:#f7f8f5;
+  --card:#ffffff;
+  --dark:#0d1a12;
+  --text:#1a1a1a;
+  --muted:#666;
+  --border:#e4e4e4;
+  --r:14px;
+  --font:'Sora',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none}
+
+/* ── CURSOR ─────────────────────────── */
+#cur{position:fixed;width:10px;height:10px;background:var(--green);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .15s}
+#cur-r{position:fixed;width:30px;height:30px;border:1.5px solid rgba(0,107,63,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .1s,top .1s}
+
+/* ── TIBEB STRIPE ───────────────────── */
+.tibeb{
+  height:5px;
+  background:repeating-linear-gradient(-45deg,
+    var(--green) 0,var(--green) 10px,
+    var(--gold) 10px,var(--gold) 20px,
+    #6d8eac 20px,#5c87c9 30px,
+    var(--red) 30px,var(--red) 40px);
+}
+
+/* ══════════════════════════════════════
+   NAV — LANDING
+══════════════════════════════════════ */
+nav{
+  position:sticky;top:0;z-index:400;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;height:66px;
+  box-shadow:0 1px 0 var(--border);
+}
+.logo{font-size:1.6rem;font-weight:800;color:var(--green);letter-spacing:-.5px;text-decoration:none}
+.logo em{font-style:normal;color:var(--gold)}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{text-decoration:none;color:var(--muted);font-size:.90rem;font-weight:600;transition:color .2s}
+.nav-links a:hover{color:var(--green)}
+.nav-right{display:flex;gap:10px}
+.btn{padding:9px 22px;border-radius:50px;font-family:var(--font);font-size:.85rem;font-weight:700;cursor:pointer;border:none;transition:all .25s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--green);color:var(--green)}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:var(--green-d);box-shadow:0 4px 20px rgba(0,107,63,.3);transform:translateY(-1px)}
+.btn-lg{padding:14px 32px;font-size:.95rem;border-radius:50px}
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero{padding:40px 10%;display:flex;justify-content:center}
+.hero-wrap{
+  width:100%;max-width:1200px;height:480px;border-radius:24px;overflow:hidden;
+  position:relative;display:flex;flex-direction:column;justify-content:center;padding:56px;
+}
+.hero-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(120deg,rgba(5,30,16,.88) 45%,rgba(5,30,16,.35) 100%);z-index:1}
+.hero-content{position:relative;z-index:2;color:#fff;max-width:600px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(252,209,22,.15);border:1px solid rgba(252,209,22,.4);
+  color:var(--gold);padding:5px 14px;border-radius:50px;
+  font-size:.75rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:22px;
+}
+.hero-badge::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero-h1{font-size:clamp(2.2rem,4vw,3.5rem);font-weight:800;line-height:1.1;letter-spacing:-.03em;margin-bottom:14px}
+.hero-h1 em{font-style:normal;color:var(--gold)}
+.hero-amh{font-family:'Noto Sans Ethiopic',sans-serif;font-size:1rem;color:rgba(255,255,255,.6);margin-bottom:20px}
+.hero-p{font-size:1.05rem;font-weight:300;color:rgba(255,255,255,.75);margin-bottom:32px;line-height:1.65}
+.hero-search{
+  display:flex;background:rgba(255,255,255,.95);
+  border-radius:50px;overflow:hidden;max-width:480px;
+  box-shadow:0 8px 40px rgba(0,0,0,.25);
+}
+.hero-search input{flex:1;border:none;padding:15px 22px;font-family:var(--font);font-size:.9rem;outline:none;color:var(--text);background:transparent}
+.hero-search input::placeholder{color:#aaa}
+.hero-search button{background:var(--green);color:#fff;border:none;padding:0 28px;font-family:var(--font);font-weight:700;font-size:.88rem;cursor:pointer;transition:background .2s;border-radius:0 50px 50px 0}
+.hero-search button:hover{background:var(--green-d)}
+.hero-trust{display:flex;gap:28px;margin-top:28px}
+.ht-item .ht-n{font-size:1.5rem;font-weight:800;color:#fff}
+.ht-item .ht-n em{font-style:normal;color:var(--gold)}
+.ht-item .ht-l{font-size:.72rem;color:rgba(255,255,255,.5);letter-spacing:.5px;text-transform:uppercase}
+.media-controls{
+  position:absolute;bottom:18px;right:18px;z-index:3;
+  display:flex;gap:8px;
+}
+.mc-btn{
+  padding:7px 16px;border-radius:50px;font-family:var(--font);font-size:.75rem;font-weight:700;
+  border:1.5px solid rgba(255,255,255,.35);background:rgba(0,0,0,.4);color:#fff;
+  cursor:pointer;backdrop-filter:blur(8px);transition:all .2s;
+}
+.mc-btn:hover,.mc-btn.active{background:var(--green);border-color:var(--green)}
+
+/* ══════════════════════════════════════
+   SECTIONS
+══════════════════════════════════════ */
+.section{padding:72px 5%;max-width:1280px;margin:0 auto}
+.s-tag{font-size:.72rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--green);font-weight:700;display:block;margin-bottom:10px}
+.s-h2{font-size:clamp(1.7rem,2.8vw,2.4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:10px}
+.s-p{color:var(--muted);font-size:.95rem;line-height:1.7;font-weight:300}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease}
+.rv.in{opacity:1;transform:none}
+
+/* ── CATEGORIES ─────────────────────── */
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:36px}
+.cat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:24px 20px;cursor:pointer;transition:all .3s;
+}
+.cat-card:hover{transform:translateY(-5px);border-color:var(--green);box-shadow:0 12px 32px rgba(0,107,63,.1)}
+.cat-card i{font-size:2rem;color:var(--green);display:block;margin-bottom:14px}
+.cat-card h3{font-size:.95rem;font-weight:700;margin-bottom:4px}
+.cat-card p{font-size:.78rem;color:var(--muted)}
+
+/* ── HOW IT WORKS ───────────────────── */
+.steps-bg{background:#f0f5f2;padding:72px 5%}
+.steps-inner{max-width:1200px;margin:0 auto}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px}
+.step-card{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.05);transition:transform .3s}
+.step-card:hover{transform:translateY(-4px)}
+.step-img{height:190px;overflow:hidden;position:relative}
+.step-img img,.step-img video{width:100%;height:100%;object-fit:cover}
+.step-num{
+  position:absolute;top:14px;left:14px;
+  width:32px;height:32px;background:var(--green);color:#fff;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;font-weight:800;
+}
+.step-body{padding:20px}
+.step-body h3{font-size:1rem;font-weight:700;margin-bottom:8px}
+.step-body p{font-size:.85rem;color:var(--muted);line-height:1.6}
+
+/* ── INSIGHTS DARK ──────────────────── */
+.insights{
+  background:var(--dark);color:#b8b7b7;
+  padding:72px 5%;display:flex;justify-content:space-between;align-items:center;gap:50px;
+  margin:60px 5%;border-radius:24px;
+}
+.ins-text{max-width:480px}
+.ins-text h2{font-size:clamp(1.8rem,3vw,2.5rem);font-weight:800;letter-spacing:-.03em;margin-bottom:16px}
+.ins-text p{color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:24px;font-weight:300}
+.ins-search{display:flex;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:50px;overflow:hidden}
+.ins-search input{flex:1;background:transparent;border:none;padding:13px 20px;color:#fff;font-family:var(--font);outline:none}
+.ins-search input::placeholder{color:rgba(255,255,255,.3)}
+.ins-search button{background:var(--green);border:none;color:#fff;padding:0 24px;font-family:var(--font);font-weight:700;cursor:pointer;border-radius:0 50px 50px 0}
+.calc-box{background:#1a2d20;border:1px solid #2a4030;border-radius:18px;padding:32px;width:380px;flex-shrink:0;text-align:center}
+.calc-box h3{font-size:1rem;font-weight:600;margin-bottom:8px;color:rgba(255,255,255,.7)}
+.calc-price{font-size:2.2rem;font-weight:800;color:var(--gold);margin-bottom:4px}
+.calc-sub{font-size:.78rem;color:rgba(255,255,255,.35);margin-bottom:18px}
+.calc-bar{height:8px;background:linear-gradient(to right,var(--gold),var(--green));border-radius:10px;margin:14px 0}
+.calc-ends{display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.35)}
+
+/* ── CTA BANNER ─────────────────────── */
+.cta-wrap{padding:0 5%;margin-bottom:60px}
+.cta-box{
+  background:linear-gradient(135deg,var(--green-d),var(--green));
+  border-radius:24px;padding:70px 60px;text-align:center;color:#fff;
+  position:relative;overflow:hidden;
+}
+.cta-box::before{
+  content:'ኢ';font-family:'Noto Sans Ethiopic',sans-serif;
+  font-size:300px;font-weight:700;
+  position:absolute;right:-40px;top:50%;transform:translateY(-50%);
+  color:rgba(255,255,255,.04);pointer-events:none;line-height:1;
+}
+.cta-box h2{font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-.03em;margin-bottom:14px}
+.cta-box p{font-size:1.05rem;color:rgba(255,255,255,.7);margin-bottom:30px;font-weight:300}
+
+/* ── FOOTER ─────────────────────────── */
+footer{background:#0d1a12;color:#ccc;padding:56px 5% 28px}
+.foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08)}
+.foot-logo{font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:10px}
+.foot-logo em{font-style:normal;color:var(--gold)}
+.foot-about{font-size:.85rem;color:rgba(255,255,255,.35);line-height:1.65;margin-bottom:18px;font-weight:300}
+.foot-h{font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:700;margin-bottom:16px}
+.foot-ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.foot-ul a{color:rgba(255,255,255,.4);text-decoration:none;font-size:.85rem;transition:color .2s;font-weight:300}
+.foot-ul a:hover{color:var(--gold)}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center}
+.foot-copy{font-size:.78rem;color:rgba(255,255,255,.2)}
+.built-by{font-size:.78rem;color:rgba(252,209,22,.6)}
+
+/* ══════════════════════════════════════
+   AUTH PAGE
+══════════════════════════════════════ */
+#authPage{
+  position:fixed;inset:0;z-index:1000;display:flex;
+  opacity:0;pointer-events:none;transition:opacity .4s;
+}
+#authPage.show{opacity:1;pointer-events:all}
+.auth-left{
+  width:40%;background:var(--dark);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:60px 52px;position:relative;overflow:hidden;
+}
+.auth-left-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 30%,rgba(0,107,63,.4),transparent),
+    radial-gradient(ellipse 60% 60% at 80% 70%,rgba(206,17,38,.12),transparent);
+}
+.auth-left-flag{position:absolute;top:0;left:0;bottom:0;width:6px;background:linear-gradient(to bottom,var(--green) 33.3%,var(--gold) 33.3%,var(--gold) 66.6%,var(--red) 66.6%)}
+.auth-left-content{position:relative;z-index:1}
+.auth-brand{font-size:2rem;font-weight:800;color:#fff;letter-spacing:-.03em;margin-bottom:6px}
+.auth-brand em{font-style:normal;color:var(--gold)}
+.auth-amh{font-family:'Noto Sans Ethiopic',sans-serif;font-size:.9rem;color:rgba(255,255,255,.4);margin-bottom:36px}
+.auth-headline{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#fff;line-height:1.15;letter-spacing:-.03em;margin-bottom:14px}
+.auth-sub{font-size:.95rem;color:rgba(255,255,255,.5);line-height:1.65;margin-bottom:40px;font-weight:300}
+.auth-dots{display:flex;gap:8px}
+.auth-dot{width:28px;height:6px;border-radius:3px;background:rgba(255,255,255,.18);transition:all .4s}
+.auth-dot.on{background:var(--gold);width:44px}
+.auth-right{
+  flex:1;background:#fff;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:60px;position:relative;overflow:hidden;
+}
+.auth-close{
+  position:absolute;top:20px;right:20px;
+  width:36px;height:36px;border-radius:50%;background:#f4f4f4;
+  border:none;cursor:pointer;font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;color:var(--muted);
+}
+.auth-close:hover{background:#ececec;color:var(--text)}
+.lang-switch{display:flex;gap:8px;margin-bottom:28px}
+.lang-btn{padding:5px 14px;border-radius:50px;font-family:var(--font);font-size:.78rem;font-weight:600;border:1.5px solid var(--border);background:transparent;cursor:pointer;transition:all .2s;color:var(--muted)}
+.lang-btn.on{border-color:var(--green);color:var(--green);background:rgba(0,107,63,.06)}
+.auth-tabs{display:flex;background:#f4f4f4;border-radius:50px;padding:5px;margin-bottom:32px;width:fit-content}
+.auth-tab{padding:10px 28px;border-radius:50px;border:none;font-family:var(--font);font-size:.88rem;font-weight:700;cursor:pointer;background:transparent;color:var(--muted);transition:all .3s}
+.auth-tab.on{background:var(--text);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.auth-title{font-size:1.9rem;font-weight:800;letter-spacing:-.03em;margin-bottom:6px}
+.auth-desc{font-size:.88rem;color:var(--muted);margin-bottom:28px}
+.fgrp{margin-bottom:18px}
+.flbl{display:block;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:8px}
+.finp-wrap{position:relative}
+.finp{
+  width:100%;padding:13px 44px 13px 16px;
+  border:1.5px solid var(--border);border-radius:10px;
+  font-family:var(--font);font-size:.93rem;color:var(--text);
+  outline:none;transition:all .25s;background:#f9fafb;
+}
+.finp:focus{border-color:var(--green);background:#fff;box-shadow:0 0 0 4px rgba(0,107,63,.08)}
+.finp-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#ccc;font-size:1.1rem}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.f-between{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:.83rem}
+.f-between a{color:var(--green);text-decoration:none;font-weight:600}
+.fcheck{display:flex;align-items:center;gap:8px;font-size:.83rem;color:var(--muted);cursor:pointer}
+.fcheck input{accent-color:var(--green)}
+.sub-btn{
+  width:100%;padding:14px;background:var(--green);color:#fff;
+  border:none;border-radius:50px;font-family:var(--font);
+  font-size:.95rem;font-weight:800;cursor:pointer;letter-spacing:.3px;
+  transition:all .3s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.sub-btn:hover{background:var(--green-d);box-shadow:0 8px 24px rgba(0,107,63,.35);transform:translateY(-1px)}
+.auth-or{text-align:center;position:relative;color:#ccc;font-size:.8rem;margin:20px 0}
+.auth-or::before,.auth-or::after{content:'';position:absolute;top:50%;width:calc(50% - 20px);height:1px;background:var(--border)}
+.auth-or::before{left:0}.auth-or::after{right:0}
+.auth-note{text-align:center;font-size:.83rem;color:var(--muted)}
+.auth-note a{color:var(--green);text-decoration:none;font-weight:700}
+.role-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.role-opt{border:1.5px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;text-align:center;transition:all .25s;font-size:.85rem;font-weight:700;color:var(--muted)}
+.role-opt:hover,.role-opt.on{border-color:var(--green);background:rgba(0,107,63,.05);color:var(--green)}
+.role-opt span{display:block;font-size:1.5rem;margin-bottom:6px}
+.auth-tc{display:none;position:relative}
+.auth-tc.on{display:block}
+
+/* ══════════════════════════════════════
+   HOME PAGE (post-login)
+══════════════════════════════════════ */
+#homePage{display:none;min-height:100vh;background:var(--bg)}
+
+/* HOME NAV */
+.home-nav{
+  position:sticky;top:0;z-index:400;
+  background:rgba(255,255,255,.97);backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 4%;height:66px;
+  box-shadow:0 1px 0 var(--border);
+}
+.home-nav-center{display:flex;align-items:center;gap:12px;flex:1;max-width:520px;margin:0 32px;background:#f2f4f2;border-radius:50px;padding:10px 18px}
+.home-nav-center i{color:var(--muted);font-size:1.1rem}
+.home-nav-center input{flex:1;border:none;background:transparent;font-family:var(--font);font-size:.88rem;outline:none;color:var(--text)}
+.home-nav-right{display:flex;align-items:center;gap:14px}
+.notif-btn{position:relative;width:38px;height:38px;border-radius:50%;border:1.5px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.notif-btn:hover{border-color:var(--green)}
+.notif-btn i{font-size:1.15rem;color:var(--muted)}
+.notif-badge{position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--red);border-radius:50%;border:1.5px solid #fff}
+.avatar-btn{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green-d));border:2px solid var(--green);cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.85rem;position:relative}
+.avatar-menu{
+  position:absolute;top:50px;right:0;background:#fff;border:1px solid var(--border);
+  border-radius:14px;padding:8px;min-width:210px;box-shadow:0 16px 48px rgba(0,0,0,.12);
+  display:none;z-index:500;
+}
+.avatar-menu.open{display:block}
+.avatar-menu-header{padding:10px 12px 14px;border-bottom:1px solid var(--border);margin-bottom:6px}
+.avatar-menu-header .av-name{font-weight:800;font-size:.95rem}
+.avatar-menu-header .av-role{font-size:.75rem;color:var(--muted)}
+.am-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;transition:background .15s;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:600}
+.am-item:hover{background:#f4f7f4;color:var(--green)}
+.am-item i{font-size:1rem;color:var(--muted)}
+.am-sep{height:1px;background:var(--border);margin:6px 0}
+.am-logout{color:var(--red)!important}
+.am-logout i{color:var(--red)!important}
+
+/* HOME HERO GREETING */
+.home-hero{
+  background:linear-gradient(135deg,var(--green-d) 0%,var(--green) 60%,#1a7a4a 100%);
+  padding:44px 5% 0;position:relative;overflow:hidden;
+}
+.home-hero::before{
+  content:'ኢ';font-family:'Noto Sans Ethiopic',sans-serif;
+  font-size:400px;font-weight:700;
+  position:absolute;right:-60px;top:-60px;
+  color:rgba(255,255,255,.04);pointer-events:none;line-height:1;
+}
+/* Tibeb pattern across top of hero */
+.home-hero-tibeb{
+  position:absolute;top:0;left:0;right:0;height:4px;
+  background:repeating-linear-gradient(-45deg,
+    var(--gold) 0,var(--gold) 10px,
+    var(--red) 10px,var(--red) 20px,
+    #5c87c9 20px,#5c87c9 30px,
+    var(--gold) 30px,var(--gold) 40px);
+}
+.home-hero-inner{max-width:1200px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:40px}
+.home-greeting{color:#fff;padding-bottom:44px}
+.greeting-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(252,209,22,.18);border:1px solid rgba(252,209,22,.35);color:var(--gold);padding:4px 13px;border-radius:50px;font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px}
+.home-greeting h1{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:8px}
+.home-greeting h1 em{font-style:normal;color:var(--gold)}
+.home-greeting .amh{font-family:'Noto Sans Ethiopic',sans-serif;font-size:.9rem;color:rgba(255,255,255,.5);margin-bottom:20px}
+.home-greeting p{font-size:.95rem;color:rgba(255,255,255,.7);font-weight:300;line-height:1.6;max-width:480px;margin-bottom:24px}
+.home-hero-btns{display:flex;gap:10px}
+.hh-btn{padding:12px 26px;border-radius:50px;font-family:var(--font);font-size:.88rem;font-weight:700;cursor:pointer;border:none;transition:all .25s}
+.hh-btn-gold{background:var(--gold);color:var(--dark)}
+.hh-btn-gold:hover{background:#f0c800;transform:translateY(-1px);box-shadow:0 6px 20px rgba(252,209,22,.4)}
+.hh-btn-outline{background:transparent;border:1.5px solid rgba(255,255,255,.35);color:#fff}
+.hh-btn-outline:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.6)}
+
+/* Stats strip in hero */
+.home-stats-strip{
+  display:flex;gap:0;background:rgba(0,0,0,.25);border-radius:16px 16px 0 0;padding:20px 28px;flex-shrink:0;
+}
+.hstat{text-align:center;padding:0 24px;border-right:1px solid rgba(255,255,255,.12)}
+.hstat:last-child{border-right:none}
+.hstat-n{font-size:1.6rem;font-weight:800;color:#fff}
+.hstat-n em{font-style:normal;color:var(--gold)}
+.hstat-l{font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.45)}
+
+/* DASHBOARD BODY */
+.home-body{max-width:1200px;margin:0 auto;padding:40px 5%}
+
+/* Quick action tiles */
+.quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:44px}
+.qa-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:22px 18px;cursor:pointer;transition:all .28s;display:flex;flex-direction:column;gap:10px;
+}
+.qa-card:hover{transform:translateY(-4px);border-color:var(--green);box-shadow:0 10px 28px rgba(0,107,63,.1)}
+.qa-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.qa-icon.green{background:rgba(0,107,63,.1);color:var(--green)}
+.qa-icon.gold{background:rgba(252,209,22,.15);color:#b89000}
+.qa-icon.red{background:rgba(206,17,38,.1);color:var(--red)}
+.qa-icon.blue{background:rgba(92,135,201,.12);color:#4a7cc4}
+.qa-title{font-size:.9rem;font-weight:700}
+.qa-sub{font-size:.75rem;color:var(--muted)}
+.qa-arrow{margin-left:auto;color:var(--muted);font-size:.8rem;margin-top:auto}
+
+/* Two-column layout */
+.home-cols{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+
+/* Feed / Job listings */
+.feed-section{}
+.feed-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.feed-title{font-size:1.15rem;font-weight:800}
+.feed-tabs{display:flex;gap:4px;background:#f2f4f2;border-radius:50px;padding:4px}
+.feed-tab{padding:7px 18px;border-radius:50px;border:none;font-family:var(--font);font-size:.78rem;font-weight:700;cursor:pointer;background:transparent;color:var(--muted);transition:all .2s}
+.feed-tab.on{background:#fff;color:var(--green);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.job-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:22px;margin-bottom:14px;cursor:pointer;transition:all .25s;position:relative;
+}
+.job-card:hover{border-color:var(--green);box-shadow:0 8px 24px rgba(0,107,63,.08);transform:translateY(-2px)}
+.job-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+.job-co{display:flex;align-items:center;gap:10px}
+.job-co-logo{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--green),#1a7a4a);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.9rem;flex-shrink:0}
+.job-co-name{font-size:.78rem;color:var(--muted);font-weight:600}
+.job-title{font-size:1rem;font-weight:800;margin-bottom:6px}
+.job-budget{font-size:1rem;font-weight:800;color:var(--green);white-space:nowrap}
+.job-budget span{font-size:.7rem;font-weight:400;color:var(--muted)}
+.job-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.job-tag{background:#f0f5f0;color:var(--green);border-radius:50px;padding:4px 11px;font-size:.72rem;font-weight:700}
+.job-tag.red{background:rgba(206,17,38,.07);color:var(--red)}
+.job-tag.blue{background:rgba(92,135,201,.1);color:#4a7cc4}
+.job-meta{display:flex;align-items:center;gap:16px;font-size:.75rem;color:var(--muted)}
+.job-meta i{font-size:.85rem}
+.job-save{
+  position:absolute;top:18px;right:18px;
+  width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border);
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;color:var(--muted);font-size:.9rem;
+}
+.job-save:hover,.job-save.saved{color:var(--gold);border-color:var(--gold);background:rgba(252,209,22,.08)}
+
+/* RIGHT SIDEBAR */
+.sidebar{}
+/* Profile card */
+.profile-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  overflow:hidden;margin-bottom:20px;
+}
+.profile-card-banner{
+  height:72px;
+  background:linear-gradient(135deg,var(--green-d),var(--green));
+  position:relative;
+}
+.profile-card-banner::after{
+  content:'ሥ';font-family:'Noto Sans Ethiopic';
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  font-size:3rem;color:rgba(255,255,255,.15);
+}
+.profile-card-body{padding:0 20px 20px;text-align:center;position:relative}
+.profile-avatar{
+  width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,var(--green),var(--gold));
+  border:3px solid #fff;margin:-32px auto 12px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:1.3rem;
+}
+.profile-name{font-weight:800;font-size:1rem;margin-bottom:2px}
+.profile-role{font-size:.75rem;color:var(--muted);margin-bottom:10px}
+.profile-stats{display:flex;justify-content:space-around;padding:14px 0;border-top:1px solid var(--border);margin-top:10px}
+.ps-item{text-align:center}
+.ps-n{font-size:1.1rem;font-weight:800;color:var(--green)}
+.ps-l{font-size:.65rem;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+.profile-complete{margin-top:14px;padding:12px;background:#f7f9f7;border-radius:10px}
+.pc-label{display:flex;justify-content:space-between;font-size:.75rem;font-weight:700;margin-bottom:6px}
+.pc-bar{height:6px;background:#e4e4e4;border-radius:3px;overflow:hidden}
+.pc-fill{height:100%;background:linear-gradient(to right,var(--green),var(--gold));border-radius:3px;width:62%}
+
+/* Featured video card */
+.video-card{
+  background:var(--dark);border-radius:var(--r);overflow:hidden;margin-bottom:20px;position:relative;
+}
+.video-thumb{
+  width:100%;aspect-ratio:16/9;object-fit:cover;display:block;
+  background:linear-gradient(135deg,#1a2d20,#0d1a12);
+}
+.video-thumb-placeholder{
+  width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#1a3820,#0a1810);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  color:rgba(255,255,255,.4);font-size:.75rem;
+}
+.video-play-btn{
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(0,107,63,.85);border:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .25s;font-size:1.2rem;color:#fff;
+}
+.video-play-btn:hover{background:var(--green);transform:scale(1.08)}
+.video-card-body{padding:16px}
+.video-card-body h4{font-size:.9rem;font-weight:800;color:#fff;margin-bottom:4px}
+.video-card-body p{font-size:.75rem;color:rgba(255,255,255,.4);line-height:1.5}
+
+/* Trending skills */
+.widget-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:20px;margin-bottom:20px;
+}
+.widget-title{font-size:.85rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.widget-title i{color:var(--green)}
+.skill-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#f0f5f0;border:1px solid #d8ead8;color:var(--green);
+  border-radius:50px;padding:5px 13px;font-size:.75rem;font-weight:700;
+  margin:4px;cursor:pointer;transition:all .2s;
+}
+.skill-pill:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.skill-pill .pill-count{background:rgba(0,107,63,.15);border-radius:50px;padding:1px 7px;font-size:.65rem}
+/* Mini freelancer cards */
+.mini-fl{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.mini-fl:last-child{border-bottom:none;padding-bottom:0}
+.mini-fl-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--green),#1a7a4a);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.85rem;flex-shrink:0}
+.mini-fl-name{font-size:.85rem;font-weight:700}
+.mini-fl-skill{font-size:.72rem;color:var(--muted)}
+.mini-fl-rate{margin-left:auto;font-size:.82rem;font-weight:800;color:var(--green);white-space:nowrap}
+/* Inline video section */
+.home-video-section{
+  background:var(--dark);border-radius:24px;padding:0;overflow:hidden;
+  margin-bottom:44px;display:flex;align-items:stretch;
+}
+.hvs-video{flex:1;position:relative;min-height:280px}
+.hvs-video video,.hvs-video-placeholder{width:100%;height:100%;object-fit:cover;display:block;min-height:280px}
+.hvs-video-placeholder{
+  background:linear-gradient(135deg,#1a3820,#0d1a12);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;color:rgba(255,255,255,.5);font-size:.85rem;
+}
+.hvs-video-overlay{position:absolute;inset:0;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center}
+.hvs-play{
+  width:64px;height:64px;border-radius:50%;
+  background:rgba(0,107,63,.9);border:2.5px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:all .25s;color:#fff;font-size:1.5rem;
+}
+.hvs-play:hover{transform:scale(1.1);background:var(--green)}
+.hvs-info{width:320px;padding:36px 32px;display:flex;flex-direction:column;justify-content:center;flex-shrink:0}
+.hvs-tag{font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:10px}
+.hvs-info h3{font-size:1.3rem;font-weight:800;color:#fff;line-height:1.25;margin-bottom:10px}
+.hvs-info p{font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.65;margin-bottom:22px}
+.hvs-amh{font-family:'Noto Sans Ethiopic',sans-serif;font-size:.85rem;color:rgba(255,255,255,.3);margin-bottom:20px}
+.hvs-btn{padding:11px 24px;background:var(--green);color:#fff;border:none;border-radius:50px;font-family:var(--font);font-weight:700;font-size:.85rem;cursor:pointer;transition:all .2s;width:fit-content}
+.hvs-btn:hover{background:var(--green-d);box-shadow:0 6px 20px rgba(0,107,63,.35)}
+
+/* Ethiopian corner banner */
+.eth-banner{
+  background:repeating-linear-gradient(-45deg,
+    rgba(0,107,63,.06) 0,rgba(0,107,63,.06) 6px,
+    transparent 6px,transparent 12px);
+  border:1.5px solid rgba(0,107,63,.15);
+  border-radius:var(--r);padding:18px 20px;margin-bottom:20px;
+  display:flex;align-items:center;gap:14px;
+}
+.eth-flag{font-size:1.8rem;flex-shrink:0}
+.eth-banner-text h4{font-size:.9rem;font-weight:800;margin-bottom:3px}
+.eth-banner-text p{font-size:.75rem;color:var(--muted);line-height:1.5}
+
+/* Post job prompt */
+.post-job-prompt{
+  background:linear-gradient(135deg,var(--green-d),var(--green));
+  border-radius:var(--r);padding:22px;color:#fff;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.post-job-prompt::after{
+  content:'ሥ';font-family:'Noto Sans Ethiopic';
+  position:absolute;right:-10px;bottom:-20px;
+  font-size:6rem;color:rgba(255,255,255,.06);
+}
+.post-job-prompt h4{font-size:.95rem;font-weight:800;margin-bottom:5px}
+.post-job-prompt p{font-size:.78rem;color:rgba(255,255,255,.65);margin-bottom:14px;line-height:1.5}
+.pjp-btn{padding:9px 20px;background:var(--gold);color:var(--dark);border:none;border-radius:50px;font-family:var(--font);font-weight:800;font-size:.8rem;cursor:pointer;transition:all .2s}
+.pjp-btn:hover{background:#f0c800}
+
+/* ══ UTILITIES ══ */
+.text-center{text-align:center}
+.mt-36{margin-top:36px}
+
+/* ── ADMIN LOGIN OVERLAY ── */
+#adminLoginOverlay{
+  position:fixed;inset:0;background:linear-gradient(135deg,var(--green-d),var(--dark));
+  z-index:9000;display:flex;align-items:center;justify-content:center;
+}
+.admin-login-box{
+  background:#fff;border-radius:20px;padding:48px 44px;width:400px;max-width:95vw;
+  box-shadow:0 24px 80px rgba(0,0,0,.4);text-align:center;
+}
+.admin-login-logo{font-size:2rem;font-weight:800;color:var(--green);margin-bottom:4px;letter-spacing:-.03em}
+.admin-login-logo em{font-style:normal;color:var(--gold)}
+.admin-login-tag{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:28px}
+.al-inp{width:100%;padding:12px 15px;border:1.5px solid var(--border);border-radius:10px;font-family:var(--font);font-size:.9rem;outline:none;margin-bottom:12px;transition:border .25s}
+.al-inp:focus{border-color:var(--green)}
+.al-btn{width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:50px;font-family:var(--font);font-size:.92rem;font-weight:800;cursor:pointer;transition:all .3s;margin-bottom:10px}
+.al-btn:hover{background:var(--green-d);box-shadow:0 8px 22px rgba(0,107,63,.3)}
+.al-google{width:100%;padding:12px;border:1.5px solid #dadce0;border-radius:50px;background:#fff;display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--font);font-size:.88rem;font-weight:700;cursor:pointer;color:#3c4043;transition:all .25s;margin-bottom:10px}
+.al-google:hover{border-color:#4285f4;background:#f8f9ff}
+.al-google svg{width:18px;height:18px}
+.al-err{font-size:.8rem;color:var(--red);text-align:center;padding:8px;background:rgba(206,17,38,.06);border-radius:6px;display:none;margin-bottom:8px}
+</style>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, updateDoc, deleteDoc, query, orderBy, where, serverTimestamp, getCountFromServer } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBVlsJ3PjzFh5QZQI7qua5jDTRJyaCo2KE",
+    authDomain: "eiveer.firebaseapp.com",
+    projectId: "eiveer",
+    storageBucket: "eiveer.firebasestorage.app",
+    messagingSenderId: "362272024389",
+    appId: "1:362272024389:web:303b06c68d400b5c60402c",
+    measurementId: "G-PEGH0XFBW2"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+  const googleProvider = new GoogleAuthProvider();
+
+  window._fb = { auth, db, storage, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, googleProvider, doc, setDoc, getDoc, collection, addDoc, getDocs, updateDoc, deleteDoc, query, orderBy, where, serverTimestamp, getCountFromServer, ref, uploadBytes, getDownloadURL };
+
+  // Admin auth gate
+  const ADMIN_EMAILS = ['dawitsol21@gmail.com','admin@eiveer.com']; // Add your admin emails here
+
+  onAuthStateChanged(auth, async (user) => {
+    window._adminUser = user;
+    if (user && ADMIN_EMAILS.includes(user.email)) {
+      window._isAdmin = true;
+      document.getElementById('adminLoginOverlay').style.display = 'none';
+      document.getElementById('adminApp').style.display = 'flex';
+      loadAdminDashboard();
+    } else if (user) {
+      // Logged in but not admin
+      window._isAdmin = false;
+      document.getElementById('adminLoginOverlay').style.display = 'flex';
+      document.getElementById('adminLoginErr').textContent = 'Access denied. This account is not an admin.';
+      document.getElementById('adminLoginErr').style.display = 'block';
+      await signOut(auth);
+    } else {
+      window._isAdmin = false;
+      document.getElementById('adminLoginOverlay').style.display = 'flex';
+      document.getElementById('adminApp').style.display = 'none';
+    }
+  });
+
+  window._fbReady = true;
+</script>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-r"></div>
+
+<!-- ══ ADMIN LOGIN OVERLAY ══ -->
+<div id="adminLoginOverlay" style="display:flex">
+  <div class="admin-login-box">
+    <div class="admin-login-logo">ei<em>verr</em></div>
+    <div class="admin-login-tag">⚙️ Admin Dashboard</div>
+    <div class="al-err" id="adminLoginErr"></div>
+    <button class="al-google" onclick="adminGoogleLogin()">
+      <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Sign In with Google
+    </button>
+    <div style="text-align:center;font-size:.75rem;color:var(--muted);margin:4px 0 12px">— or use email —</div>
+    <input class="al-inp" type="email" id="adminEmail" placeholder="admin@eiveer.com">
+    <input class="al-inp" type="password" id="adminPass" placeholder="Password" onkeydown="if(event.key==='Enter')adminEmailLogin()">
+    <button class="al-btn" onclick="adminEmailLogin()">Sign In →</button>
+    <div style="font-size:.72rem;color:var(--muted);margin-top:8px">Only authorised admin accounts can access this panel.</div>
+  </div>
+</div>
+
+<!-- ══ ADMIN APP (hidden until authenticated) ══ -->
+<div id="adminApp" style="display:none;flex-direction:column;min-height:100vh">
+
+
+<!-- ══════════════════════════════════════════
+     LANDING PAGE
+══════════════════════════════════════════ -->
+<div id="landingPage">
+
+<div class="tibeb"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">ei<em>verr</em></a>
+  <ul class="nav-links">
+    <li><a href="#">Find Talent</a></li>
+    <li><a href="#">Find Work</a></li>
+    <li><a href="#">Why eiverr</a></li>
+    <li><a href="#">Enterprise</a></li>
+    <li><a href="#">Post Jobs</a></li>
+    <li><a href="#">Contact Admin</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn btn-outline" onclick="openAuth('login')">Log In</button>
+    <button class="btn btn-green" onclick="openAuth('signup')">Sign Up</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div style="padding:36px 5%">
+<div class="hero-wrap">
+
+  <!--
+  ════════════════════════════════════════════════
+   HERO BACKGROUND — HOW TO CHANGE:
+   ▸ VIDEO : name your file  hero-bg.mp4
+             place it in same folder as this HTML
+             click "▶ Video" button (bottom-right of hero)
+   ▸ IMAGE : name your file  hero-bg.jpg  (or .png / .webp)
+             place it in same folder
+             click "🖼 Image" button
+  ════════════════════════════════════════════════
+  -->
+  <video id="heroVideo" class="hero-media" autoplay muted loop playsinline style="display:none">
+    <source src="hero-bg.mp4" type="video/mp4">
+  </video>
+  <img id="heroImg" class="hero-media" src="Copilot_20260507_125015.png" alt="Hero" style="display:block">
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">🇪🇹 Ethiopia's Leading Freelance Hub</div>
+    <h1 class="hero-h1">Hire the best.<br><em>Earn in ETB.</em></h1>
+    <div class="hero-amh">ችሎታዎን ያሳዩ · ሥራ ይፈልጉ · ይከፈሉ</div>
+    <p class="hero-p">Connecting Ethiopian businesses with top local talent — securely, fast, in Ethiopian Birr.</p>
+    <div class="hero-search">
+      <input type="text" placeholder="Search skills (e.g., Flutter, Logo Design, Amharic Writing…)">
+      <button><i class='bx bx-search'></i> Search</button>
+    </div>
+    <div class="hero-trust">
+      <div class="ht-item"><div class="ht-n">Growing <em>K+</em></div><div class="ht-l">Freelancers</div></div>
+      <div class="ht-item"><div class="ht-n">New <em>Jobs</em></div><div class="ht-l">Active Jobs</div></div>
+      <div class="ht-item"><div class="ht-n">Soon <em>M+</em></div><div class="ht-l">ETB Paid</div></div>
+    </div>
+  </div>
+
+  <div class="media-controls">
+    <button class="mc-btn active" id="mcImg" onclick="setMedia('image')">🖼 Image</button>
+    <button class="mc-btn" id="mcVid" onclick="setMedia('video')">▶ Video</button>
+  </div>
+</div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="section rv">
+  <span class="s-tag">Explore</span>
+  <h2 class="s-h2">Find the right talent</h2>
+  <p class="s-p">Browse Ethiopia's most in-demand skill categories.</p>
+  <div class="cat-grid mt-36">
+    <div class="cat-card rv"><i class='bx bx-code-alt'></i><h3>Development & IT</h3><p>4.85/5 average rating</p></div>
+    <div class="cat-card rv" style="transition-delay:.07s"><i class='bx bx-palette'></i><h3>Design & Creative</h3><p>Graphics, UI/UX, Branding</p></div>
+    <div class="cat-card rv" style="transition-delay:.14s"><i class='bx bx-line-chart'></i><h3>Sales & Marketing</h3><p>SEO, Social Media, Ads</p></div>
+    <div class="cat-card rv" style="transition-delay:.21s"><i class='bx bx-pen'></i><h3>Writing & Translation</h3><p>Amharic, Oromo, English</p></div>
+    <div class="cat-card rv" style="transition-delay:.07s"><i class='bx bx-support'></i><h3>Admin & Support</h3><p>Virtual Assistants</p></div>
+    <div class="cat-card rv" style="transition-delay:.14s"><i class='bx bx-calculator'></i><h3>Finance & Accounting</h3><p>Tax, Bookkeeping</p></div>
+    <div class="cat-card rv" style="transition-delay:.21s"><i class='bx bx-buildings'></i><h3>Engineering & Arch</h3><p>AutoCAD, 3D Design</p></div>
+    <div class="cat-card rv" style="transition-delay:.28s"><i class='bx bx-briefcase'></i><h3>Legal Services</h3><p>Contracts, Corporate</p></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="steps-bg">
+<div class="steps-inner">
+  <div class="rv">
+    <span class="s-tag">Process</span>
+    <h2 class="s-h2">How it works</h2>
+    <p class="s-p">Three steps — from posting a job to getting paid in ETB.</p>
+    <p class="s-p">Payment is only by Telebirr, CBE and other trusted Ethiopian banks.</p>
+  </div>
+  <div class="steps-grid mt-36">
+    <div class="step-card rv">
+      <div class="step-img">
+        <img src="Copilot_20260503_104628.png" alt="Post Job">
+        <div class="step-num">1</div>
+      </div>
+      <div class="step-body">
+        <h3>Post a job for free</h3>
+        <p>Describe what you need. Set a budget in ETB. We connect you with the right talent across Ethiopia instantly.</p>
+      </div>
+    </div>
+    <div class="step-card rv" style="transition-delay:.1s">
+      <div class="step-img">
+        <img src="Copilot_20260507_123619.png" alt="Hire">
+        <div class="step-num">2</div>
+      </div>
+      <div class="step-body">
+        <h3>Review proposals & hire</h3>
+        <p>Browse profiles, portfolios, and ratings. Interview your favourites and hire the best fit with confidence.</p>
+      </div>
+    </div>
+    <div class="step-card rv" style="transition-delay:.2s">
+      <div class="step-img">
+        <img src="Copilot_20260507_123613.png" alt="Pay">
+        <div class="step-num">3</div>
+      </div>
+      <div class="step-body">
+        <h3>Pay securely in ETB</h3>
+        <p>Use Telebirr or CBE. Funds held in escrow — you only pay when the work is approved and delivered.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- INSIGHTS DARK -->
+<div class="insights rv">
+  <div class="ins-text">
+    <h2>Get insights into freelancer pricing in Birr</h2>
+    <p>Use data to hire smartly. Understand live market rates for Ethiopian talent instantly.</p>
+    <div class="ins-search">
+      <input type="text" placeholder="e.g., Full Stack Developer">
+      <button>Search</button>
+    </div>
+  </div>
+  <div class="calc-box">
+    <h3>Cost Estimate</h3>
+    <div class="calc-price">1,000 – 8,000 ETB</div>
+    <div class="calc-sub">Per Project · Nationwide</div>
+    <div class="calc-bar"></div>
+    <div class="calc-ends"><span>Entry Level</span><span>Expert</span></div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-wrap rv">
+  <div class="cta-box">
+    <h2>Find your next hire or your next gig — post a job starting at 100 Birr</h2>
+    <p>Join the leading network of Ethiopian professionals ready to grow your business — or your career.</p>
+    <button class="btn btn-lg" style="background:#fff;color:var(--green);font-weight:800" onclick="openAuth('signup')">Register on eiverr →</button>
+  </div>
+</div>
+
+<!-- CREDITS -->
+<div style="text-align:center;padding:10px 0 40px;font-size:.8rem;color:#aaa;letter-spacing:1.5px;text-transform:uppercase">
+  Designed & Built by <strong style="color:var(--green)">Dawit Solomon</strong>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="foot-logo">ei<em>verr</em></div>
+      <div class="foot-about">Empowering the Ethiopian digital workforce. Real work. Real pay. In Ethiopian Birr.</div>
+    </div>
+    <div>
+      <div class="foot-h">For Clients</div>
+      <ul class="foot-ul">
+        <li><a href="#">How to Hire</a></li>
+        <li><a href="#">Talent Marketplace</a></li>
+        <li><a href="#">Payroll Services</a></li>
+        <li><a href="#">Enterprise</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="foot-h">For Talent</div>
+      <ul class="foot-ul">
+        <li><a href="#">How to Find Work</a></li>
+        <li><a href="#">Direct Contracts</a></li>
+        <li><a href="#">Payment Guides</a></li>
+        <li><a href="#">Community</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="foot-h">Resources</div>
+      <ul class="foot-ul">
+        <li><a href="#">Help & Support</a></li>
+        <li><a href="#">Trust & Safety</a></li>
+        <li><a href="#">Addis Ababa Office</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Admin: davidfooter09@gmail.com</a></li>
+        <li><a href="#">Phone: 0931308691</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div class="foot-copy">© 2025 eiverr · All rights reserved · Addis Ababa, Ethiopia 🇪🇹</div>
+    <div class="built-by">Built by Dawit Solomon</div>
+  </div>
+</footer>
+<div class="tibeb"></div>
+
+</div><!-- /landingPage -->
+
+
+<!-- ══════════════════════════════════════════
+     AUTH PAGE
+══════════════════════════════════════════ -->
+<div id="authPage">
+  <div class="auth-left">
+    <div class="auth-left-flag"></div>
+    <div class="auth-left-bg"></div>
+    <div class="auth-left-content">
+      <div class="auth-brand">ei<em>verr</em></div>
+      <div class="auth-amh">የሥራ ዕድሎች እንደ ቤታ</div>
+      <h2 class="auth-headline" id="authHeadline">ችሎታዎን ያሳዩ<br><span style="color:rgba(255,255,255,.55);font-size:.85em">Find work. Get paid.<br>Own your future.</span></h2>
+      <div class="auth-dots">
+        <div class="auth-dot on"></div>
+        <div class="auth-dot"></div>
+        <div class="auth-dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-right">
+    <button class="auth-close" onclick="closeAuth()">✕</button>
+    <div class="lang-switch">
+      <button class="lang-btn on">English</button>
+      <button class="lang-btn" onclick="toggleLang(this)">አማርኛ</button>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab on" id="tabLogin" onclick="authSwitch('login')">Log In</button>
+      <button class="auth-tab" id="tabSignup" onclick="authSwitch('signup')">Sign Up</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="auth-tc on" id="tcLogin">
+      <h2 class="auth-title">Welcome back to eiverr</h2>
+      <p class="auth-desc">Sign in to your eiverr account</p>
+      <div class="fgrp">
+        <label class="flbl">Email</label>
+        <div class="finp-wrap">
+          <input class="finp" type="email" id="loginEmail" placeholder="you@example.com">
+          <i class='bx bx-envelope finp-icon'></i>
+        </div>
+      </div>
+      <div class="fgrp">
+        <label class="flbl">Password</label>
+        <div class="finp-wrap">
+          <input class="finp" type="password" id="loginPass" placeholder="••••••••">
+          <i class='bx bx-lock-alt finp-icon'></i>
+        </div>
+      </div>
+      <div class="f-between">
+        <label class="fcheck"><input type="checkbox"> Remember me</label>
+        <a href="#">Forgot password?</a>
+      </div>
+      <button class="sub-btn" onclick="doLogin()">Log In <i class='bx bx-right-arrow-alt'></i></button>
+      <div class="auth-or">or</div>
+      <p class="auth-note">No account? <a href="#" onclick="authSwitch('signup')">Create one free</a></p>
+    </div>
+
+    <!-- SIGNUP -->
+    <div class="auth-tc" id="tcSignup">
+      <h2 class="auth-title">Create account</h2>
+      <p class="auth-desc">Join thousands of Ethiopian freelancers</p>
+      <div class="role-row">
+        <div class="role-opt on" onclick="pickRole(this)"><span>💼</span>Freelancer</div>
+        <div class="role-opt" onclick="pickRole(this)"><span>🏢</span>Client / Employer</div>
+      </div>
+      <div class="frow">
+        <div class="fgrp">
+          <label class="flbl">First Name</label>
+          <div class="finp-wrap"><input class="finp" id="signupFirst" type="text" placeholder="Dawit"><i class='bx bx-user finp-icon'></i></div>
+        </div>
+        <div class="fgrp">
+          <label class="flbl">Last Name</label>
+          <div class="finp-wrap"><input class="finp" id="signupLast" type="text" placeholder="Solomon"><i class='bx bx-user finp-icon'></i></div>
+        </div>
+      </div>
+      <div class="fgrp">
+        <label class="flbl">Email</label>
+        <div class="finp-wrap"><input class="finp" type="email" placeholder="you@example.com"><i class='bx bx-envelope finp-icon'></i></div>
+      </div>
+      <div class="fgrp">
+        <label class="flbl">Password</label>
+        <div class="finp-wrap"><input class="finp" type="password" placeholder="Min 8 characters"><i class='bx bx-lock-alt finp-icon'></i></div>
+      </div>
+      <button class="sub-btn" onclick="doSignup()">Create Account <i class='bx bx-right-arrow-alt'></i></button>
+      <div class="auth-or">or</div>
+      <p class="auth-note">Already have an account? <a href="#" onclick="authSwitch('login')">Log in</a></p>
+    </div>
+  </div>
+</div><!-- /authPage -->
+
+
+<!-- ══════════════════════════════════════════
+     HOME PAGE (post-login)
+══════════════════════════════════════════ -->
+<div id="homePage">
+<div class="tibeb"></div>
+
+<!-- HOME NAV -->
+<nav class="home-nav">
+  <a href="#" class="logo" onclick="backToLanding(event)">ei<em>verr</em></a>
+  <div class="home-nav-center">
+    <i class='bx bx-search'></i>
+    <input type="text" placeholder="Search jobs, skills, freelancers…">
+  </div>
+  <div class="home-nav-right">
+    <button class="btn btn-green" style="font-size:.82rem;padding:9px 18px" onclick="alert('Post Job page coming soon!')">+ Post Job</button>
+    <div class="notif-btn">
+      <i class='bx bx-bell'></i>
+      <div class="notif-badge"></div>
+    </div>
+    <div style="position:relative">
+      <div class="avatar-btn" id="avatarBtn" onclick="toggleAvatarMenu()">
+        <span id="avatarInitial">D</span>
+      </div>
+      <div class="avatar-menu" id="avatarMenu">
+        <div class="avatar-menu-header">
+          <div class="av-name" id="menuName">Dawit S.</div>
+          <div class="av-role">Freelancer · Addis Ababa</div>
+        </div>
+        <a class="am-item" href="#"><i class='bx bx-user'></i> View Profile</a>
+        <a class="am-item" href="#"><i class='bx bx-briefcase'></i> My Jobs</a>
+        <a class="am-item" href="#"><i class='bx bx-wallet'></i> Earnings & Payments</a>
+        <a class="am-item" href="#"><i class='bx bx-cog'></i> Settings</a>
+        <div class="am-sep"></div>
+        <a class="am-item am-logout" href="#" onclick="doLogout()"><i class='bx bx-log-out'></i> Log Out</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HOME HERO GREETING -->
+<div class="home-hero">
+  <div class="home-hero-tibeb"></div>
+  <div class="home-hero-inner">
+    <div class="home-greeting">
+      <div class="greeting-tag">🇪🇹 eiverr Dashboard</div>
+      <h1>ይናፍቃል፣ <em id="heroUserName">Dawit</em>!</h1>
+      <div class="amh">እንኳን ደህና መጡ — ዛሬ ምን ሥራ አለ?</div>
+      <p>Your personalised workspace. Find jobs, manage proposals, and track your earnings — all in one place.</p>
+      <div class="home-hero-btns">
+        <button class="hh-btn hh-btn-gold">Browse Jobs</button>
+        <button class="hh-btn hh-btn-outline">View My Profile</button>
+      </div>
+    </div>
+    <div class="home-stats-strip">
+      <div class="hstat"><div class="hstat-n">0 <em>ETB</em></div><div class="hstat-l">Total Earned</div></div>
+      <div class="hstat"><div class="hstat-n">0</div><div class="hstat-l">Active Jobs</div></div>
+      <div class="hstat"><div class="hstat-n">0</div><div class="hstat-l">Proposals</div></div>
+      <div class="hstat"><div class="hstat-n">—</div><div class="hstat-l">Rating</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD BODY -->
+<div class="home-body">
+
+  <!-- QUICK ACTIONS -->
+  <div class="quick-actions">
+    <div class="qa-card">
+      <div class="qa-icon green"><i class='bx bx-search-alt'></i></div>
+      <div class="qa-title">Find Work</div>
+      <div class="qa-sub">Browse open projects in your skills</div>
+      <div class="qa-arrow">→</div>
+    </div>
+    <div class="qa-card">
+      <div class="qa-icon gold"><i class='bx bx-send'></i></div>
+      <div class="qa-title">My Proposals</div>
+      <div class="qa-sub">Track bids & responses</div>
+      <div class="qa-arrow">→</div>
+    </div>
+    <div class="qa-card">
+      <div class="qa-icon red"><i class='bx bx-wallet'></i></div>
+      <div class="qa-title">Payments</div>
+      <div class="qa-sub">Telebirr · CBE · Bank Transfer</div>
+      <div class="qa-arrow">→</div>
+    </div>
+    <div class="qa-card">
+      <div class="qa-icon blue"><i class='bx bx-id-card'></i></div>
+      <div class="qa-title">My Profile</div>
+      <div class="qa-sub">Edit skills, portfolio & bio</div>
+      <div class="qa-arrow">→</div>
+    </div>
+  </div>
+
+  <!--
+  ═══════════════════════════════════════════════
+   FEATURED VIDEO SECTION
+   ▸ Name your video file:  eiverr-intro.mp4
+   ▸ Place it in the SAME folder as this HTML file
+   ▸ The poster image name: eiverr-video-poster.jpg
+   ▸ If no video file, a styled placeholder is shown
+  ═══════════════════════════════════════════════
+  -->
+  <div class="home-video-section">
+    <div class="hvs-video">
+      <video id="homeVideo" style="width:100%;height:100%;object-fit:cover;min-height:280px;display:none"
+        poster="eiverr-video-poster.jpg"
+        src="eiverr-intro.mp4">
+      </video>
+      <!-- Placeholder shown when no video file is present -->
+      <div class="hvs-video-placeholder" id="homeVideoPlaceholder">
+        <i class='bx bx-play-circle' style="font-size:3rem;color:var(--green)"></i>
+        <span>eiverr-intro.mp4</span>
+        <span style="font-size:.7rem;opacity:.5">Place video in same folder as this HTML</span>
+      </div>
+      <div class="hvs-video-overlay" id="homeVideoOverlay">
+        <div class="hvs-play" onclick="playHomeVideo()">
+          <i class='bx bx-play'></i>
+        </div>
+      </div>
+    </div>
+    <div class="hvs-info">
+      <div class="hvs-tag">🎬 Featured · About eiverr</div>
+      <h3>eiverr — Ethiopia's freelance revolution starts here</h3>
+      <p>See how thousands of Ethiopian professionals are finding work, earning in Birr, and building real careers on eiverr.</p>
+      <div class="hvs-amh">ሥራ ይፈልጉ · ይቀጠሩ · ይከፈሉ</div>
+      <button class="hvs-btn" onclick="playHomeVideo()">▶ Watch Now</button>
+    </div>
+  </div>
+
+  <!-- MAIN TWO-COLUMN -->
+  <div class="home-cols">
+
+    <!-- JOB FEED -->
+    <div class="feed-section">
+      <div class="feed-header">
+        <div class="feed-title">Recommended Jobs</div>
+        <div class="feed-tabs">
+          <button class="feed-tab on">For You</button>
+          <button class="feed-tab" onclick="switchFeedTab(this)">Recent</button>
+          <button class="feed-tab" onclick="switchFeedTab(this)">Saved</button>
+        </div>
+      </div>
+
+      <!-- JOB CARDS -->
+      <div class="job-card rv">
+        <div class="job-save" onclick="toggleSave(this)"><i class='bx bx-bookmark'></i></div>
+        <div class="job-card-top">
+          <div class="job-co">
+            <div class="job-co-logo">A</div>
+            <div>
+              <div class="job-co-name">Addis Tech Solutions</div>
+              <div class="job-title">Flutter Mobile App Developer</div>
+            </div>
+          </div>
+          <div class="job-budget">3,500 ETB<br><span>/ project</span></div>
+        </div>
+        <div class="job-tags">
+          <span class="job-tag">Flutter</span>
+          <span class="job-tag">Dart</span>
+          <span class="job-tag blue">Remote</span>
+          <span class="job-tag red">Urgent</span>
+        </div>
+        <p style="font-size:.82rem;color:var(--muted);line-height:1.55;margin-bottom:12px">Build a delivery tracking mobile app for Android & iOS. Experience with Firebase and Google Maps API required. Payment via Telebirr upon milestone completion.</p>
+        <div class="job-meta">
+          <span><i class='bx bx-map-pin'></i> Addis Ababa</span>
+          <span><i class='bx bx-time'></i> 2 days ago</span>
+          <span><i class='bx bx-group'></i> 4 proposals</span>
+        </div>
+      </div>
+
+      <div class="job-card rv" style="transition-delay:.07s">
+        <div class="job-save" onclick="toggleSave(this)"><i class='bx bx-bookmark'></i></div>
+        <div class="job-card-top">
+          <div class="job-co">
+            <div class="job-co-logo" style="background:linear-gradient(135deg,#b89000,#fcd116);color:#0d1a12">B</div>
+            <div>
+              <div class="job-co-name">Birr Media Agency</div>
+              <div class="job-title">Amharic Content Writer & Translator</div>
+            </div>
+          </div>
+          <div class="job-budget">1,200 ETB<br><span>/ article</span></div>
+        </div>
+        <div class="job-tags">
+          <span class="job-tag">Amharic</span>
+          <span class="job-tag">Copywriting</span>
+          <span class="job-tag blue">Ongoing</span>
+        </div>
+        <p style="font-size:.82rem;color:var(--muted);line-height:1.55;margin-bottom:12px">We need a skilled Amharic writer for weekly blog posts and social media content. Topics: tech, business, lifestyle. 3–5 articles per week.</p>
+        <div class="job-meta">
+          <span><i class='bx bx-map-pin'></i> Remote</span>
+          <span><i class='bx bx-time'></i> 5 hours ago</span>
+          <span><i class='bx bx-group'></i> 2 proposals</span>
+        </div>
+      </div>
+
+      <div class="job-card rv" style="transition-delay:.14s">
+        <div class="job-save" onclick="toggleSave(this)"><i class='bx bx-bookmark'></i></div>
+        <div class="job-card-top">
+          <div class="job-co">
+            <div class="job-co-logo" style="background:linear-gradient(135deg,#ce1126,#a00e1e)">E</div>
+            <div>
+              <div class="job-co-name">eTrade Ethiopia</div>
+              <div class="job-title">Logo & Brand Identity Designer</div>
+            </div>
+          </div>
+          <div class="job-budget">2,800 ETB<br><span>/ project</span></div>
+        </div>
+        <div class="job-tags">
+          <span class="job-tag">Illustrator</span>
+          <span class="job-tag">Branding</span>
+          <span class="job-tag">Logo Design</span>
+          <span class="job-tag red">Urgent</span>
+        </div>
+        <p style="font-size:.82rem;color:var(--muted);line-height:1.55;margin-bottom:12px">Design a full brand identity for a new Ethiopian e-commerce platform. Deliverables: logo, colour palette, typography, business card. Ethio-inspired aesthetic preferred.</p>
+        <div class="job-meta">
+          <span><i class='bx bx-map-pin'></i> Addis Ababa</span>
+          <span><i class='bx bx-time'></i> 1 day ago</span>
+          <span><i class='bx bx-group'></i> 7 proposals</span>
+        </div>
+      </div>
+
+      <div class="job-card rv" style="transition-delay:.21s">
+        <div class="job-save" onclick="toggleSave(this)"><i class='bx bx-bookmark'></i></div>
+        <div class="job-card-top">
+          <div class="job-co">
+            <div class="job-co-logo" style="background:linear-gradient(135deg,#4a7cc4,#2d5aa0)">H</div>
+            <div>
+              <div class="job-co-name">Habesha Startup Hub</div>
+              <div class="job-title">Video Editor & Motion Graphics</div>
+            </div>
+          </div>
+          <div class="job-budget">4,000 ETB<br><span>/ video</span></div>
+        </div>
+        <div class="job-tags">
+          <span class="job-tag">Premiere Pro</span>
+          <span class="job-tag">After Effects</span>
+          <span class="job-tag blue">Part-time</span>
+        </div>
+        <p style="font-size:.82rem;color:var(--muted);line-height:1.55;margin-bottom:12px">Edit promotional videos and add Amharic subtitles & motion graphics. Experience with 2D animation is a plus. 2–4 videos per month expected.</p>
+        <div class="job-meta">
+          <span><i class='bx bx-map-pin'></i> Addis Ababa</span>
+          <span><i class='bx bx-time'></i> 3 hours ago</span>
+          <span><i class='bx bx-group'></i> 1 proposal</span>
+        </div>
+      </div>
+
+      <div style="text-align:center;padding:24px 0">
+        <button class="btn btn-outline" style="font-size:.85rem">View all jobs <i class='bx bx-right-arrow-alt'></i></button>
+      </div>
+    </div><!-- /feed -->
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+      <!-- Profile Card -->
+      <div class="profile-card">
+        <div class="profile-card-banner"></div>
+        <div class="profile-card-body">
+          <div class="profile-avatar" id="sidebarAvatar">D</div>
+          <div class="profile-name" id="sidebarName">Dawit Solomon</div>
+          <div class="profile-role">Freelancer · Addis Ababa, Ethiopia 🇪🇹</div>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px">
+            <span class="skill-pill" style="margin:0;font-size:.68rem">Animation</span>
+            <span class="skill-pill" style="margin:0;font-size:.68rem">Virus Removal</span>
+            <span class="skill-pill" style="margin:0;font-size:.68rem">Art & Design</span>
+          </div>
+          <div class="profile-stats">
+            <div class="ps-item"><div class="ps-n">0</div><div class="ps-l">Jobs</div></div>
+            <div class="ps-item"><div class="ps-n">—</div><div class="ps-l">Rating</div></div>
+            <div class="ps-item"><div class="ps-n">0</div><div class="ps-l">Reviews</div></div>
+          </div>
+          <div class="profile-complete">
+            <div class="pc-label"><span>Profile Strength</span><span style="color:var(--green)">62%</span></div>
+            <div class="pc-bar"><div class="pc-fill"></div></div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:6px">Add portfolio to reach 80%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ethiopian banner -->
+      <div class="eth-banner">
+        <div class="eth-flag">🇪🇹</div>
+        <div class="eth-banner-text">
+          <h4>eiverr is proudly Ethiopian</h4>
+          <p>All payments in ETB via Telebirr & CBE. Serving talent across Addis, Dire Dawa, Mekelle & beyond.</p>
+        </div>
+      </div>
+
+      <!-- Post job prompt -->
+      <div class="post-job-prompt">
+        <h4>Need to hire someone?</h4>
+        <p>Post a job starting at 100 Birr and find the right talent across Ethiopia in hours.</p>
+        <button class="pjp-btn">Post a Job →</button>
+      </div>
+
+      <!-- Trending skills widget -->
+      <div class="widget-card">
+        <div class="widget-title"><i class='bx bx-trending-up'></i> Trending Skills in Ethiopia</div>
+        <div>
+          <span class="skill-pill">Flutter <span class="pill-count">+42%</span></span>
+          <span class="skill-pill">React <span class="pill-count">+38%</span></span>
+          <span class="skill-pill">Amharic Writing <span class="pill-count">+31%</span></span>
+          <span class="skill-pill">Video Editing <span class="pill-count">+27%</span></span>
+          <span class="skill-pill">UI/UX Design <span class="pill-count">+24%</span></span>
+          <span class="skill-pill">AutoCAD <span class="pill-count">+19%</span></span>
+          <span class="skill-pill">Python <span class="pill-count">+17%</span></span>
+          <span class="skill-pill">Animation <span class="pill-count">+15%</span></span>
+        </div>
+      </div>
+
+      <!-- Top Freelancers -->
+      <div class="widget-card">
+        <div class="widget-title"><i class='bx bx-star'></i> Top Freelancers This Week</div>
+        <div class="mini-fl">
+          <div class="mini-fl-av">Y</div>
+          <div><div class="mini-fl-name">Yonas Tadesse</div><div class="mini-fl-skill">Flutter · Addis Ababa</div></div>
+          <div class="mini-fl-rate">5★</div>
+        </div>
+        <div class="mini-fl">
+          <div class="mini-fl-av" style="background:linear-gradient(135deg,#b89000,#fcd116);color:#0d1a12">S</div>
+          <div><div class="mini-fl-name">Sara Getachew</div><div class="mini-fl-skill">UI/UX · Bahir Dar</div></div>
+          <div class="mini-fl-rate">4.9★</div>
+        </div>
+        <div class="mini-fl">
+          <div class="mini-fl-av" style="background:linear-gradient(135deg,#ce1126,#a00e1e)">K</div>
+          <div><div class="mini-fl-name">Kirubel Alemu</div><div class="mini-fl-skill">Video Editing · Mekelle</div></div>
+          <div class="mini-fl-rate">4.8★</div>
+        </div>
+        <div class="mini-fl">
+          <div class="mini-fl-av" style="background:linear-gradient(135deg,#4a7cc4,#2d5aa0)">H</div>
+          <div><div class="mini-fl-name">Hanna Bekele</div><div class="mini-fl-skill">Amharic Writing · Hawassa</div></div>
+          <div class="mini-fl-rate">4.8★</div>
+        </div>
+      </div>
+
+    </div><!-- /sidebar -->
+  </div><!-- /home-cols -->
+</div><!-- /home-body -->
+
+<!-- HOME FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="foot-logo">ei<em>verr</em></div>
+      <div class="foot-about">Empowering the Ethiopian digital workforce. Real work. Real pay. In Ethiopian Birr.</div>
+    </div>
+    <div>
+      <div class="foot-h">For Clients</div>
+      <ul class="foot-ul">
+        <li><a href="#">How to Hire</a></li>
+        <li><a href="#">Talent Marketplace</a></li>
+        <li><a href="#">Post a Job</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="foot-h">For Talent</div>
+      <ul class="foot-ul">
+        <li><a href="#">How to Find Work</a></li>
+        <li><a href="#">Payment Guides</a></li>
+        <li><a href="#">Community</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="foot-h">Contact</div>
+      <ul class="foot-ul">
+        <li><a href="#">davidfooter09@gmail.com</a></li>
+        <li><a href="#">0931308691</a></li>
+        <li><a href="#">Addis Ababa Office</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div class="foot-copy">© 2025 eiverr · Addis Ababa, Ethiopia 🇪🇹</div>
+    <div class="built-by">Built by Dawit Solomon</div>
+  </div>
+</footer>
+<div class="tibeb"></div>
+
+</div><!-- /homePage -->
+
+
+<!-- ══════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════ -->
+<script>
+/* ── Custom Cursor ── */
+const cur=document.getElementById('cur'),curR=document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function raf(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(raf)})();
+
+/* ── Scroll Reveal ── */
+function initReveal(){
+  const els=document.querySelectorAll('.rv:not(.in)');
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.1});
+  els.forEach(e=>io.observe(e));
+}
+initReveal();
+
+/* ── Hero Media Swap ── */
+function setMedia(type){
+  const vid=document.getElementById('heroVideo');
+  const img=document.getElementById('heroImg');
+  const mcI=document.getElementById('mcImg');
+  const mcV=document.getElementById('mcVid');
+  if(type==='video'){
+    vid.style.display='block';img.style.display='none';
+    mcV.classList.add('active');mcI.classList.remove('active');
+    vid.play().catch(()=>{});
+  } else {
+    img.style.display='block';vid.style.display='none';
+    mcI.classList.add('active');mcV.classList.remove('active');
+    vid.pause();
+  }
+}
+
+/* ── Auth Page ── */
+const authPage=document.getElementById('authPage');
+function openAuth(tab){
+  authPage.classList.add('show');
+  document.body.style.overflow='hidden';
+  authSwitch(tab);
+}
+function closeAuth(){
+  authPage.classList.remove('show');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAuth()});
+
+function authSwitch(tab){
+  const tLogin=document.getElementById('tabLogin');
+  const tSignup=document.getElementById('tabSignup');
+  const cLogin=document.getElementById('tcLogin');
+  const cSignup=document.getElementById('tcSignup');
+  const headline=document.getElementById('authHeadline');
+  [cLogin,cSignup].forEach(c=>{c.classList.remove('on')});
+  if(tab==='login'){
+    tLogin.classList.add('on');tSignup.classList.remove('on');
+    cLogin.classList.add('on');
+    headline.innerHTML='ወደ ቤትዎ እንኳን ደህና መጡ<br><span style="color:rgba(255,255,255,.55);font-size:.85em">Welcome back.<br>Sign in to continue.</span>';
+  } else {
+    tSignup.classList.add('on');tLogin.classList.remove('on');
+    cSignup.classList.add('on');
+    headline.innerHTML='ችሎታዎን ያሳዩ<br><span style="color:rgba(255,255,255,.55);font-size:.85em">Find work. Get paid.<br>Own your future.</span>';
+  }
+}
+function pickRole(el){
+  document.querySelectorAll('.role-opt').forEach(r=>r.classList.remove('on'));
+  el.classList.add('on');
+}
+function toggleLang(btn){
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+let dotIdx=0;
+setInterval(()=>{
+  const dots=document.querySelectorAll('.auth-dot');
+  dots.forEach(d=>d.classList.remove('on'));
+  dotIdx=(dotIdx+1)%dots.length;
+  dots[dotIdx].classList.add('on');
+},3000);
+
+/* ── Login / Signup ── */
+function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  if(!email||!pass){alert('Please enter your email and password.');return;}
+  // Extract first name from email for greeting
+  const name=email.split('@')[0];
+  const displayName=name.charAt(0).toUpperCase()+name.slice(1);
+  goToHome(displayName);
+}
+function doSignup(){
+  const first=document.getElementById('signupFirst').value.trim()||'Friend';
+  const last=document.getElementById('signupLast').value.trim()||'';
+  const displayName=first+(last?' '+last:'');
+  goToHome(displayName);
+}
+
+function goToHome(name){
+  // Update user name everywhere
+  const initial=name.charAt(0).toUpperCase();
+  document.getElementById('heroUserName').textContent=name.split(' ')[0];
+  document.getElementById('menuName').textContent=name;
+  document.getElementById('avatarInitial').textContent=initial;
+  document.getElementById('sidebarName').textContent=name;
+  document.getElementById('sidebarAvatar').textContent=initial;
+
+  closeAuth();
+  document.getElementById('landingPage').style.display='none';
+  const hp=document.getElementById('homePage');
+  hp.style.display='block';
+  window.scrollTo(0,0);
+  setTimeout(initReveal,100);
+}
+
+function doLogout(){
+  document.getElementById('homePage').style.display='none';
+  document.getElementById('landingPage').style.display='block';
+  window.scrollTo(0,0);
+  closeAvatarMenu();
+}
+
+function backToLanding(e){
+  e.preventDefault();
+  doLogout();
+}
+
+/* ── Avatar Menu ── */
+function toggleAvatarMenu(){
+  document.getElementById('avatarMenu').classList.toggle('open');
+}
+function closeAvatarMenu(){
+  document.getElementById('avatarMenu').classList.remove('open');
+}
+document.addEventListener('click',e=>{
+  const btn=document.getElementById('avatarBtn');
+  const menu=document.getElementById('avatarMenu');
+  if(menu&&!btn.contains(e.target)&&!menu.contains(e.target)){
+    menu.classList.remove('open');
+  }
+});
+
+/* ── Feed Tabs ── */
+function switchFeedTab(el){
+  document.querySelectorAll('.feed-tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+}
+
+/* ── Save Job Toggle ── */
+function toggleSave(el){
+  el.classList.toggle('saved');
+  el.innerHTML=el.classList.contains('saved')
+    ? "<i class='bx bxs-bookmark'></i>"
+    : "<i class='bx bx-bookmark'></i>";
+}
+
+/* ── Home Video ── */
+function playHomeVideo(){
+  const vid=document.getElementById('homeVideo');
+  const ph=document.getElementById('homeVideoPlaceholder');
+  const overlay=document.getElementById('homeVideoOverlay');
+  // Try to play the real video; if it fails (file missing), show placeholder
+  vid.style.display='block';
+  ph.style.display='none';
+  overlay.style.display='none';
+  vid.play().catch(()=>{
+    vid.style.display='none';
+    ph.style.display='flex';
+    overlay.style.display='flex';
+    alert('Video not found.\nPlace a file named  eiverr-intro.mp4  in the same folder as this HTML file.');
+  });
+}
+// Check if video file exists on load
+window.addEventListener('load',()=>{
+  const vid=document.getElementById('homeVideo');
+  vid.addEventListener('error',()=>{
+    vid.style.display='none';
+    document.getElementById('homeVideoPlaceholder').style.display='flex';
+  });
+  vid.load();
+});
+
+
+/* ══════════════════════════════════════════
+   ADMIN FIREBASE FUNCTIONS
+══════════════════════════════════════════ */
+
+/* ── Admin Login ── */
+async function adminEmailLogin(){
+  if(!window._fb){setTimeout(adminEmailLogin,400);return;}
+  const email=document.getElementById('adminEmail').value.trim();
+  const pass=document.getElementById('adminPass').value;
+  const err=document.getElementById('adminLoginErr');
+  if(!email||!pass){err.textContent='Enter email and password.';err.style.display='block';return;}
+  try{
+    await window._fb.signInWithEmailAndPassword(window._fb.auth,email,pass);
+  }catch(e){
+    err.textContent=e.message.replace('Firebase: ','').replace(' (auth/invalid-credential).','Invalid email or password');
+    err.style.display='block';
+  }
+}
+
+async function adminGoogleLogin(){
+  if(!window._fb){setTimeout(adminGoogleLogin,400);return;}
+  const err=document.getElementById('adminLoginErr');
+  try{
+    await window._fb.signInWithPopup(window._fb.auth,window._fb.googleProvider);
+  }catch(e){
+    if(e.code!=='auth/popup-closed-by-user'){
+      err.textContent='Google sign-in failed: '+e.message;
+      err.style.display='block';
+    }
+  }
+}
+
+async function adminLogout(){
+  if(window._fb) await window._fb.signOut(window._fb.auth);
+}
+
+/* ── Load Admin Dashboard ── */
+async function loadAdminDashboard(){
+  if(!window._fb||!window._isAdmin)return;
+  const {db,collection,getDocs,query,orderBy,where}=window._fb;
+  try{
+    // Count users
+    const usersSnap=await getDocs(collection(db,'users'));
+    const el=document.getElementById('adminStatUsers');
+    if(el)el.textContent=usersSnap.size;
+
+    // Count jobs
+    const jobsSnap=await getDocs(collection(db,'jobs'));
+    const jel=document.getElementById('adminStatJobs');
+    if(jel)jel.textContent=jobsSnap.size;
+
+    // Count applications
+    const appsSnap=await getDocs(collection(db,'applications'));
+    const ael=document.getElementById('adminStatApps');
+    if(ael)ael.textContent=appsSnap.size;
+
+    // Load users table
+    loadAdminUsers(usersSnap);
+    // Load jobs table
+    loadAdminJobs(jobsSnap);
+  }catch(e){console.log('Dashboard load error:',e);}
+}
+
+function loadAdminUsers(snap){
+  const tbody=document.getElementById('adminUsersBody');
+  if(!tbody)return;
+  tbody.innerHTML='';
+  snap.forEach(d=>{
+    const u=d.data();
+    tbody.innerHTML+=`<tr>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.8rem;overflow:hidden;flex-shrink:0">
+          ${u.photoURL?`<img src="${u.photoURL}" style="width:100%;height:100%;object-fit:cover">`:(u.displayName||'U').charAt(0).toUpperCase()}
+        </div>
+        <div><div style="font-weight:700;font-size:.85rem">${u.displayName||'—'}</div><div style="font-size:.72rem;color:var(--muted)">${u.email||'—'}</div></div>
+      </div></td>
+      <td><span style="padding:3px 9px;border-radius:50px;font-size:.72rem;font-weight:700;background:rgba(0,107,63,.1);color:var(--green)">${u.role||'freelancer'}</span></td>
+      <td style="font-size:.82rem;color:var(--muted)">${u.location||'—'}</td>
+      <td style="font-size:.82rem">${(u.skills||[]).slice(0,2).join(', ')||'—'}</td>
+      <td><span style="padding:3px 9px;border-radius:50px;font-size:.72rem;font-weight:700;background:${u.profileComplete?'rgba(0,107,63,.1)':'rgba(252,209,22,.15)'};color:${u.profileComplete?'var(--green)':'#b89000'}">${u.profileComplete?'Complete':'Incomplete'}</span></td>
+      <td><button onclick="adminDeleteUser('${d.id}')" style="padding:4px 12px;border:1.5px solid var(--red);background:transparent;color:var(--red);border-radius:50px;font-size:.72rem;font-weight:700;cursor:pointer">Remove</button></td>
+    </tr>`;
+  });
+  if(!snap.size)tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--muted)">No users yet</td></tr>';
+}
+
+async function adminDeleteUser(uid){
+  if(!confirm('Remove this user from Firestore? (This does not delete their auth account)'))return;
+  const {db,doc,deleteDoc}=window._fb;
+  try{
+    await deleteDoc(doc(db,'users',uid));
+    showAdminToast('User removed');
+    loadAdminDashboard();
+  }catch(e){showAdminToast('Error: '+e.message,'red');}
+}
+
+function loadAdminJobs(snap){
+  const tbody=document.getElementById('adminJobsBody');
+  if(!tbody)return;
+  tbody.innerHTML='';
+  snap.forEach(d=>{
+    const j=d.data();
+    const statusCls=j.status==='active'?'rgba(0,107,63,.1)':'rgba(252,209,22,.15)';
+    const statusTxt=j.status==='active'?'var(--green)':'#b89000';
+    tbody.innerHTML+=`<tr>
+      <td style="font-size:.85rem;font-weight:700;max-width:200px">${j.title||'—'}</td>
+      <td style="font-size:.82rem;color:var(--muted)">${j.posterName||'—'}</td>
+      <td style="font-size:.82rem">${j.category||'—'}</td>
+      <td style="font-size:.85rem;font-weight:700;color:var(--green)">${Number(j.budget||0).toLocaleString()} ETB</td>
+      <td><span style="padding:3px 9px;border-radius:50px;font-size:.72rem;font-weight:700;background:${statusCls};color:${statusTxt}">${j.status||'pending'}</span></td>
+      <td style="display:flex;gap:6px">
+        <button onclick="adminApproveJob('${d.id}')" style="padding:4px 10px;border:none;background:var(--green);color:#fff;border-radius:50px;font-size:.72rem;font-weight:700;cursor:pointer">Approve</button>
+        <button onclick="adminDeleteJob('${d.id}')" style="padding:4px 10px;border:1.5px solid var(--red);background:transparent;color:var(--red);border-radius:50px;font-size:.72rem;font-weight:700;cursor:pointer">Delete</button>
+      </td>
+    </tr>`;
+  });
+  if(!snap.size)tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--muted)">No jobs yet</td></tr>';
+}
+
+async function adminApproveJob(jobId){
+  const {db,doc,updateDoc}=window._fb;
+  try{
+    await updateDoc(doc(db,'jobs',jobId),{status:'active'});
+    showAdminToast('Job approved and live ✓');
+    loadAdminDashboard();
+  }catch(e){showAdminToast('Error: '+e.message,'red');}
+}
+
+async function adminDeleteJob(jobId){
+  if(!confirm('Delete this job permanently?'))return;
+  const {db,doc,deleteDoc}=window._fb;
+  try{
+    await deleteDoc(doc(db,'jobs',jobId));
+    showAdminToast('Job deleted');
+    loadAdminDashboard();
+  }catch(e){showAdminToast('Error: '+e.message,'red');}
+}
+
+function showAdminToast(msg,type='green'){
+  const t=document.getElementById('adminToast');
+  if(!t)return;
+  t.textContent=msg;
+  t.style.background=type==='red'?'var(--red)':'var(--green)';
+  t.style.opacity='1';
+  setTimeout(()=>t.style.opacity='0',3500);
+}
+
+/* ── Override existing goToHome to use Firebase ── */
+const _origGoToHome=typeof goToHome!=='undefined'?goToHome:null;
+
+</script>
+
+<div id="adminToast" style="position:fixed;bottom:20px;right:20px;background:var(--green);color:#fff;padding:12px 22px;border-radius:10px;font-size:.88rem;font-weight:600;z-index:9999;opacity:0;pointer-events:none;transition:opacity .3s;box-shadow:0 6px 20px rgba(0,0,0,.2)"></div>
+</div><!-- /adminApp -->
+</body>
+</html>
