@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electric Bill Payments</title>
+
+<!-- ==========================================================
+  FIRESTORE DATA STRUCTURE (for reference)
+  ----------------------------------------------------------
+  users (collection)
+    doc id: user email
+      - name: string
+      - createdAt: timestamp
+
+  bills (collection)
+    doc id: meter number
+      - amount: number
+      - dueDate: string / timestamp
+      - status: "unpaid" | "paid"
+
+  payments (collection)
+    doc id: `${meterNumber}_${timestamp}`
+      - meter: string
+      - status: "success" | "failed"
+      - date: timestamp
+      - amount: number
+=========================================================== -->
+
+<style>
+  :root{
+    --c1:#7b2ff7;      /* electric purple   */
+    --c2:#2575fc;      /* electric blue     */
+    --c3:#00e5ff;      /* electric cyan     */
+    --c4:#ffb300;      /* spark amber       */
+    --c5:#ff3d68;      /* shock pink-red    */
+    --success:#00e676;
+    --error:#ff3d3d;
+    --card:#ffffff;
+    --text:#1c1c2e;
+    --muted:#6b7280;
+    --radius:16px;
+    --shadow:0 10px 30px rgba(31,17,71,0.18);
+    --grad-main: linear-gradient(135deg, var(--c1) 0%, var(--c2) 45%, var(--c3) 100%);
+    --grad-warm: linear-gradient(135deg, var(--c4), var(--c5));
+    --grad-success: linear-gradient(135deg, #00c853, #00e676);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Segoe UI',Roboto,Arial,sans-serif;
+    background: var(--grad-main);
+    background-attachment:fixed;
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+  .hidden{display:none !important;}
+  img{max-width:100%;display:block;}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 20px;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(8px);
+    box-shadow:var(--shadow);
+    position:sticky;
+    top:0;
+    z-index:50;
+  }
+  .topbar-left{display:flex;align-items:center;gap:10px;}
+  .topbar img.logo{height:38px;}
+  .topbar h1{
+    font-size:1.05rem;
+    background:var(--grad-main);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    font-weight:700;
+  }
+  .icon-btn{
+    background:none;border:none;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:2px;
+    color:var(--muted);font-size:0.65rem;
+  }
+  .icon-btn img{height:24px;}
+
+  /* ---------- Auth screen ---------- */
+  #authScreen{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:
+      linear-gradient(135deg, rgba(123,47,247,0.55), rgba(37,117,252,0.55), rgba(0,229,255,0.5)),
+      url('signin-bg.jpg') center/cover no-repeat;
+    min-height:100vh;
+  }
+  .auth-card{
+    background:var(--card);
+    padding:36px 30px;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    width:100%;
+    max-width:400px;
+    text-align:center;
+    animation:fadeUp .5s ease;
+  }
+  @keyframes fadeUp{ from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
+  .auth-card img.logo{height:56px;margin-bottom:10px;}
+  .auth-card p.tagline{color:var(--muted);font-size:0.85rem;margin-bottom:18px;}
+  .auth-card h2{
+    margin-bottom:18px;
+    background:var(--grad-main);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    font-size:1.4rem;
+  }
+  .field{ text-align:left; margin-bottom:14px; }
+  .field label{
+    display:block; font-size:0.82rem; color:var(--muted); margin-bottom:5px; font-weight:600;
+  }
+  input[type="email"], input[type="password"], input[type="text"]{
+    width:100%; padding:12px 14px; border:1.5px solid #e1e4ea; border-radius:12px;
+    font-size:0.95rem; outline:none; transition:border .2s, box-shadow .2s;
+    background:#fafbfc;
+  }
+  input:focus{ border-color:var(--c2); box-shadow:0 0 0 3px rgba(37,117,252,0.15); background:#fff; }
+  button{
+    cursor:pointer; border:none; border-radius:12px; font-size:0.95rem; font-weight:700;
+    padding:13px; width:100%; transition:transform .15s, box-shadow .2s, opacity .2s;
+  }
+  button:active{ transform:scale(0.97); }
+  .btn-primary{ background:var(--grad-main); color:#fff; box-shadow:0 6px 18px rgba(37,117,252,0.35); }
+  .btn-primary:hover{ box-shadow:0 8px 22px rgba(37,117,252,0.5); }
+  .btn-secondary{ background:var(--grad-warm); color:#fff; margin-top:10px; box-shadow:0 6px 18px rgba(255,61,104,0.3); }
+  .link-btn{
+    background:none; border:none; color:var(--c2); font-size:0.83rem; margin-top:12px;
+    cursor:pointer; width:auto; font-weight:600;
+  }
+
+  /* ---------- Dashboard ---------- */
+  #dashboardScreen{
+    flex:1;
+    background:
+      linear-gradient(160deg, rgba(123,47,247,0.06), rgba(0,229,255,0.08)),
+      url('dashboard-bg.jpg') center/cover no-repeat fixed;
+    min-height:100vh;
+    padding-bottom:96px;
+  }
+  .dash-container{
+    max-width:560px;
+    margin:0 auto;
+    padding:22px 16px;
+    display:grid;
+    gap:18px;
+  }
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:22px;
+    transition:transform .2s, box-shadow .2s;
+  }
+  .card:hover{ transform:translateY(-2px); box-shadow:0 14px 34px rgba(31,17,71,0.2); }
+  .card h3{
+    margin-bottom:16px; color:var(--text); display:flex; align-items:center; gap:10px;
+    font-size:1.05rem;
+  }
+  .card h3 img{height:24px;}
+  .meter-row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .meter-row input{ flex:1; min-width:160px; }
+  .meter-row button{ width:auto; padding:12px 20px; flex-shrink:0; white-space:nowrap; }
+
+  .bill-info{
+    margin-top:18px; padding:16px; border-radius:12px;
+    background:linear-gradient(135deg, rgba(123,47,247,0.05), rgba(0,229,255,0.08));
+    display:none;
+    border:1px solid #eef0fb;
+  }
+  .bill-info.show{ display:block; animation:fadeUp .35s ease; }
+  .bill-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:8px 0; border-bottom:1px dashed #e2e6ea; font-size:0.92rem;
+  }
+  .bill-row:last-child{ border-bottom:none; }
+  .status-pill{ padding:3px 12px; border-radius:20px; font-size:0.75rem; font-weight:700; }
+  .status-unpaid{ background:#fdecea; color:var(--error); }
+  .status-paid{ background:#e6fbef; color:var(--success); }
+
+  .pay-btn{
+    margin-top:18px; background:var(--grad-success); color:#fff;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 6px 18px rgba(0,200,83,0.35);
+  }
+  .pay-btn img{ height:18px; filter:brightness(0) invert(1); }
+
+  /* ---------- Receipt ---------- */
+  .receipt-box{ text-align:center; padding:6px 0; }
+  .receipt-box img.receipt-icon{ height:56px; margin-bottom:10px; }
+  .receipt-details{
+    text-align:left; background:#f8fafc; border-radius:12px; padding:16px; margin-top:12px; font-size:0.9rem;
+  }
+
+  /* ---------- Messages ---------- */
+  #messageBox{
+    position:fixed; top:16px; left:50%; transform:translateX(-50%); z-index:400;
+    max-width:92%; width:400px; display:flex; align-items:center; gap:10px;
+    padding:13px 18px; border-radius:12px; box-shadow:var(--shadow); font-size:0.9rem;
+    animation:slideDown .25s ease; font-weight:600;
+  }
+  #messageBox img{ height:20px; }
+  .msg-success{ background:#e6fbef; color:#00893a; border:1px solid #b6f0cf; }
+  .msg-error{ background:#fdecea; color:var(--error); border:1px solid #f5c6cb; }
+  .msg-info{ background:#eaf1ff; color:#2554b8; border:1px solid #c6d9fb; }
+  @keyframes slideDown{ from{opacity:0;transform:translate(-50%,-20px);} to{opacity:1;transform:translate(-50%,0);} }
+
+  /* ---------- Loading ---------- */
+  #loadingOverlay{
+    position:fixed; inset:0; background:rgba(255,255,255,0.8); display:flex;
+    flex-direction:column; align-items:center; justify-content:center; z-index:300;
+  }
+  #loadingOverlay img{ height:60px; }
+  #loadingOverlay span{ margin-top:10px; color:var(--muted); font-size:0.9rem; font-weight:600; }
+
+  /* ---------- Bottom nav ---------- */
+  .bottom-nav{
+    position:fixed; bottom:0; left:0; right:0;
+    background:rgba(255,255,255,0.95); backdrop-filter:blur(8px);
+    box-shadow:0 -4px 18px rgba(31,17,71,0.12);
+    display:flex; justify-content:space-around; padding:10px 0 8px; z-index:50;
+  }
+  .nav-item{
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    background:none; border:none; color:var(--muted); font-size:0.72rem; width:auto;
+    padding:5px 12px; border-radius:10px; font-weight:600; transition:background .2s,color .2s;
+  }
+  .nav-item img{ height:24px; }
+  .nav-item:hover{ color:var(--c2); background:rgba(37,117,252,0.08); }
+
+  /* ---------- Modal ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(20,10,40,0.55); display:flex;
+    align-items:center; justify-content:center; z-index:150; padding:16px;
+  }
+  .modal-box{
+    background:#fff; border-radius:var(--radius); padding:26px; max-width:440px; width:100%;
+    max-height:82vh; overflow-y:auto; box-shadow:var(--shadow); animation:fadeUp .3s ease;
+  }
+  .modal-box h3{
+    margin-bottom:16px; display:flex; align-items:center; gap:8px;
+    background:var(--grad-main); -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .modal-box h3 img{ height:22px; }
+  .close-modal{ background:#f0f2f8; color:var(--text); margin-top:18px; font-weight:700; }
+  .history-item{
+    display:flex; justify-content:space-between; align-items:center; padding:11px 0;
+    border-bottom:1px solid #eef1f4; font-size:0.88rem;
+  }
+  .history-item:last-child{ border-bottom:none; }
+
+  /* ---------- Electric cable connect / shock animation ---------- */
+  .cable-overlay{
+    position:fixed; inset:0; z-index:500; background:rgba(10,6,25,0.82);
+    display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .cable-card{
+    background:#14102b; border-radius:20px; padding:30px 24px; width:100%; max-width:380px;
+    text-align:center; box-shadow:0 20px 50px rgba(0,0,0,0.5);
+  }
+  .cable-stage{ position:relative; width:100%; height:90px; margin-bottom:14px; }
+  .wire{
+    position:absolute; top:50%; height:6px; border-radius:6px; transform:translateY(-50%);
+    width:0; transition:width .7s ease;
+  }
+  .wire-left{ left:0; background:linear-gradient(90deg, var(--c2), var(--c3)); }
+  .wire-right{ right:0; background:linear-gradient(270deg, var(--c1), var(--c4)); }
+  .cable-stage.connecting .wire-left{ width:calc(50% - 22px); }
+  .cable-stage.connecting .wire-right{ width:calc(50% - 22px); }
+
+  .plug{
+    position:absolute; top:50%; width:38px; height:38px; border-radius:10px;
+    background:linear-gradient(160deg,#2b2b45,#15152a); transform:translate(-50%,-50%);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 14px rgba(0,0,0,0.4); transition:left .7s ease;
+  }
+  .plug svg{ width:20px; height:20px; }
+  .plug-left{ left:0; }
+  .plug-right{ left:100%; }
+  .cable-stage.connecting .plug-left{ left:calc(50% - 22px); }
+  .cable-stage.connecting .plug-right{ left:calc(50% + 22px); }
+
+  .zap{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:44px; height:44px; opacity:0; pointer-events:none;
+  }
+  .cable-stage.spark-success .zap-success{ opacity:1; animation:burst .6s ease forwards; }
+  .cable-stage.spark-shock .zap-shock{ opacity:1; animation:flash .5s ease forwards; }
+  .cable-stage.spark-shock{ animation:shakeStage .45s ease; }
+  @keyframes burst{
+    0%{ transform:translate(-50%,-50%) scale(0.2); opacity:0; }
+    40%{ opacity:1; }
+    100%{ transform:translate(-50%,-50%) scale(2.2); opacity:0; }
+  }
+  @keyframes flash{
+    0%{ opacity:0; transform:translate(-50%,-50%) scale(0.6); }
+    25%{ opacity:1; transform:translate(-50%,-50%) scale(1.3); }
+    50%{ opacity:0.3; }
+    75%{ opacity:1; transform:translate(-50%,-50%) scale(1.1); }
+    100%{ opacity:0; }
+  }
+  @keyframes shakeStage{
+    0%,100%{ transform:translateX(0); }
+    20%{ transform:translateX(-8px); }
+    40%{ transform:translateX(8px); }
+    60%{ transform:translateX(-5px); }
+    80%{ transform:translateX(5px); }
+  }
+  .cable-status-text{ color:#e8e8f5; font-weight:700; font-size:0.95rem; letter-spacing:0.3px; }
+
+  /* ---------- Responsive ---------- */
+  @media (min-width:700px){
+    .dash-container{ grid-template-columns:1fr; max-width:640px; padding:30px 20px; }
+    .auth-card{ padding:44px 40px; }
+  }
+  @media (min-width:1000px){
+    .dash-container{ max-width:680px; }
+  }
+  @media (max-width:420px){
+    .topbar h1{ font-size:0.9rem; }
+    .card{ padding:18px; }
+    .meter-row button{ width:100%; }
+    .cable-card{ padding:24px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= LOADING OVERLAY ================= -->
+<div id="loadingOverlay" class="hidden">
+  <img src="loading.gif" alt="Loading">
+  <span>Please wait...</span>
+</div>
+
+<!-- ================= MESSAGE BOX ================= -->
+<div id="messageBox" class="hidden"></div>
+
+<!-- ================= ELECTRIC CABLE CONNECT / SHOCK ANIMATION ================= -->
+<div id="cableOverlay" class="cable-overlay hidden">
+  <div class="cable-card">
+    <div class="cable-stage" id="cableStage">
+      <div class="wire wire-left" id="wireLeft"></div>
+      <div class="wire wire-right" id="wireRight"></div>
+
+      <div class="plug plug-left" id="plugLeft">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M7 2v6M17 2v6M5 8h14v4a7 7 0 0 1-14 0V8z" stroke="#ffd200" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="plug plug-right" id="plugRight">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M7 2v6M17 2v6M5 8h14v4a7 7 0 0 1-14 0V8z" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="zap zap-success" id="zapSuccess">
+        <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="4" fill="#ffd200"/>
+          <g stroke="#ffd200" stroke-width="2.5" stroke-linecap="round">
+            <line x1="20" y1="0" x2="20" y2="10"/><line x1="20" y1="30" x2="20" y2="40"/>
+            <line x1="0" y1="20" x2="10" y2="20"/><line x1="30" y1="20" x2="40" y2="20"/>
+            <line x1="6" y1="6" x2="13" y2="13"/><line x1="27" y1="27" x2="34" y2="34"/>
+            <line x1="34" y1="6" x2="27" y2="13"/><line x1="13" y1="27" x2="6" y2="34"/>
+          </g>
+        </svg>
+      </div>
+      <div class="zap zap-shock" id="zapShock">
+        <svg viewBox="0 0 24 40"><polygon points="14,0 2,22 11,22 8,40 22,16 12,16" fill="#ff3d3d"/></svg>
+      </div>
+    </div>
+    <p id="cableStatusText" class="cable-status-text">Connecting...</p>
+  </div>
+</div>
+
+<!-- ================= AUTH SCREEN ================= -->
+<div id="authScreen">
+  <div class="auth-card">
+    <img src="logo.png" alt="Electric Bill Payments Logo" class="logo">
+    <p class="tagline">Pay your electric bill in seconds</p>
+    <h2 id="authTitle">Sign In</h2>
+
+    <div class="field">
+      <label for="emailInput">Email Address</label>
+      <input type="email" id="emailInput" placeholder="you@example.com">
+    </div>
+    <div class="field">
+      <label for="passwordInput">Password</label>
+      <input type="password" id="passwordInput" placeholder="••••••••">
+    </div>
+
+    <button class="btn-primary" id="signInBtn">Sign In</button>
+    <button class="btn-secondary hidden" id="registerBtn">Create Account</button>
+    <button class="link-btn" id="toggleAuthMode">New here? Create an account instead</button>
+  </div>
+</div>
+
+<!-- ================= DASHBOARD SCREEN ================= -->
+<div id="dashboardScreen" class="hidden">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <img src="logo.png" alt="Logo" class="logo">
+      <h1>Electric Bill Payments</h1>
+    </div>
+    <button class="icon-btn" id="notifIcon">
+      <img src="notification.png" alt="Notifications">
+      Alerts
+    </button>
+  </div>
+
+  <div class="dash-container">
+
+    <!-- Meter lookup card -->
+    <div class="card">
+      <h3><img src="electric-meter.png" alt="Electric Meter Icon"> Check Your Bill</h3>
+      <div class="meter-row">
+        <input type="text" id="meterInput" placeholder="Enter meter number">
+        <button class="btn-primary" id="fetchBillBtn">Fetch Bill</button>
+      </div>
+
+      <div class="bill-info" id="billInfo">
+        <div class="bill-row"><span>Meter Number</span><span id="billMeter">-</span></div>
+        <div class="bill-row"><span>Amount Due</span><span id="billAmount">-</span></div>
+        <div class="bill-row"><span>Due Date</span><span id="billDueDate">-</span></div>
+        <div class="bill-row"><span>Status</span><span id="billStatus" class="status-pill">-</span></div>
+
+        <button class="pay-btn" id="payBillBtn">
+          <img src="pay-icon.png" alt="Pay Icon"> Pay Bill
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom navigation -->
+  <div class="bottom-nav">
+    <button class="nav-item" id="navHistory"><img src="history-icon.png" alt="History Icon">History</button>
+    <button class="nav-item" id="navProfile"><img src="profile-icon.png" alt="Profile Icon">Profile</button>
+    <button class="nav-item" id="navLogout"><img src="logout-icon.png" alt="Logout Icon">Logout</button>
+  </div>
+</div>
+
+<!-- ================= RECEIPT MODAL ================= -->
+<div class="modal-overlay hidden" id="receiptModal">
+  <div class="modal-box">
+    <div class="receipt-box">
+      <img id="receiptStatusIcon" src="success.png" alt="Payment Status Icon" class="receipt-icon">
+      <h3 id="receiptTitle">Payment Successful</h3>
+      <img src="receipt.png" alt="Receipt Icon" style="height:38px;opacity:0.55;margin:6px auto 0;">
+      <div class="receipt-details">
+        <div class="bill-row"><span>Meter Number</span><span id="rcMeter">-</span></div>
+        <div class="bill-row"><span>Amount Paid</span><span id="rcAmount">-</span></div>
+        <div class="bill-row"><span>Date</span><span id="rcDate">-</span></div>
+        <div class="bill-row"><span>Reference</span><span id="rcRef">-</span></div>
+      </div>
+    </div>
+    <button class="close-modal" onclick="closeModal('receiptModal')">Close</button>
+  </div>
+</div>
+
+<!-- ================= HISTORY MODAL ================= -->
+<div class="modal-overlay hidden" id="historyModal">
+  <div class="modal-box">
+    <h3><img src="history-icon.png" alt="History Icon"> Payment History</h3>
+    <div id="historyList">
+      <p style="color:var(--muted);font-size:0.9rem;">No history loaded yet.</p>
+    </div>
+    <button class="close-modal" onclick="closeModal('historyModal')">Close</button>
+  </div>
+</div>
+
+<!-- ================= PROFILE MODAL ================= -->
+<div class="modal-overlay hidden" id="profileModal">
+  <div class="modal-box">
+    <h3><img src="profile-icon.png" alt="Profile Icon"> My Profile</h3>
+    <div id="profileDetails">
+      <div class="bill-row"><span>Name</span><span id="profName">-</span></div>
+      <div class="bill-row"><span>Email</span><span id="profEmail">-</span></div>
+      <div class="bill-row"><span>Member Since</span><span id="profCreated">-</span></div>
+    </div>
+    <button class="close-modal" onclick="closeModal('profileModal')">Close</button>
+  </div>
+</div>
+
+<!-- ================= FIREBASE SDK ================= -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+  /* ================= FIREBASE CONFIG ================= */
+  const firebaseConfig = {
+    apiKey: "AIzaSyD6sQe-EkSCU-vIJAdrk3bcNdG9nFBu0Xg",
+    authDomain: "electric-bill-payments.firebaseapp.com",
+    projectId: "electric-bill-payments",
+    storageBucket: "electric-bill-payments.firebasestorage.app",
+    messagingSenderId: "573719991100",
+    appId: "1:573719991100:web:b09be30ab75a6d73a84439",
+    measurementId: "G-BC27X3L1BP"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  /* ================= HELPERS ================= */
+  const $ = (id) => document.getElementById(id);
+
+  function showLoading(show){
+    $('loadingOverlay').classList.toggle('hidden', !show);
+  }
+
+  function showMessage(text, type = 'info'){
+    const box = $('messageBox');
+    const icon = type === 'success' ? 'success.png' : (type === 'error' ? 'error.png' : 'notification.png');
+    box.innerHTML = `<img src="${icon}" alt=""><span>${text}</span>`;
+    box.className = `msg-${type}`;
+    box.classList.remove('hidden');
+    clearTimeout(window._msgTimeout);
+    window._msgTimeout = setTimeout(() => box.classList.add('hidden'), 4000);
+  }
+
+  function openModal(id){ $(id).classList.remove('hidden'); }
+  function closeModal(id){ $(id).classList.add('hidden'); }
+
+  function formatDate(d){
+    if(!d) return '-';
+    if(d.toDate) d = d.toDate();
+    const dateObj = (d instanceof Date) ? d : new Date(d);
+    return isNaN(dateObj) ? String(d) : dateObj.toLocaleString();
+  }
+
+  /* ================= CABLE CONNECT / SHOCK ANIMATION ================= */
+  function playCableAnimation(state){
+    return new Promise(resolve => {
+      const overlay = $('cableOverlay');
+      const stage = $('cableStage');
+      stage.className = 'cable-stage';
+      overlay.classList.remove('hidden');
+      $('cableStatusText').textContent = 'Connecting...';
+
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        stage.classList.add('connecting');
+      }));
+
+      setTimeout(() => {
+        if(state === 'success'){
+          stage.classList.add('spark-success');
+          $('cableStatusText').textContent = 'Connected!';
+        } else {
+          stage.classList.add('spark-shock');
+          $('cableStatusText').textContent = 'Connection Failed!';
+        }
+        setTimeout(() => {
+          overlay.classList.add('hidden');
+          resolve();
+        }, 850);
+      }, 750);
+    });
+  }
+
+  /* ================= AUTH MODE TOGGLE ================= */
+  let isRegisterMode = false;
+  $('toggleAuthMode').addEventListener('click', () => {
+    isRegisterMode = !isRegisterMode;
+    $('authTitle').textContent = isRegisterMode ? 'Create Account' : 'Sign In';
+    $('signInBtn').classList.toggle('hidden', isRegisterMode);
+    $('registerBtn').classList.toggle('hidden', !isRegisterMode);
+    $('toggleAuthMode').textContent = isRegisterMode
+      ? 'Already have an account? Sign in instead'
+      : 'New here? Create an account instead';
+  });
+
+  /* ================= SIGN IN ================= */
+  $('signInBtn').addEventListener('click', async () => {
+    const email = $('emailInput').value.trim();
+    const password = $('passwordInput').value;
+    if(!email || !password){
+      showMessage('Please enter both email and password.', 'error');
+      return;
+    }
+    showLoading(true);
+    let success = false, errObj = null;
+    try{
+      await auth.signInWithEmailAndPassword(email, password);
+      success = true;
+    }catch(err){
+      errObj = err;
+    }
+    showLoading(false);
+    await playCableAnimation(success ? 'success' : 'shock');
+    if(success){
+      showMessage('Signed in successfully.', 'success');
+    }else{
+      showMessage(friendlyError(errObj), 'error');
+    }
+  });
+
+  /* ================= REGISTER ================= */
+  $('registerBtn').addEventListener('click', async () => {
+    const email = $('emailInput').value.trim();
+    const password = $('passwordInput').value;
+    if(!email || !password){
+      showMessage('Please enter both email and password.', 'error');
+      return;
+    }
+    showLoading(true);
+    let success = false, errObj = null;
+    try{
+      await auth.createUserWithEmailAndPassword(email, password);
+      await db.collection('users').doc(email).set({
+        name: email.split('@')[0],
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      success = true;
+    }catch(err){
+      errObj = err;
+    }
+    showLoading(false);
+    await playCableAnimation(success ? 'success' : 'shock');
+    if(success){
+      showMessage('Account created. You are now signed in.', 'success');
+    }else{
+      showMessage(friendlyError(errObj), 'error');
+    }
+  });
+
+  function friendlyError(err){
+    if(!err) return 'Something went wrong. Please try again.';
+    const map = {
+      'auth/invalid-email': 'That email address looks invalid.',
+      'auth/user-not-found': 'No account found with that email.',
+      'auth/wrong-password': 'Incorrect password. Please try again.',
+      'auth/invalid-credential': 'Incorrect email or password.',
+      'auth/email-already-in-use': 'An account already exists with that email.',
+      'auth/weak-password': 'Password should be at least 6 characters.',
+      'auth/too-many-requests': 'Too many attempts. Please try again later.'
+    };
+    return map[err.code] || err.message || 'Something went wrong. Please try again.';
+  }
+
+  /* ================= AUTH STATE ================= */
+  let currentUser = null;
+
+  auth.onAuthStateChanged((user) => {
+    currentUser = user;
+    if(user){
+      $('authScreen').classList.add('hidden');
+      $('dashboardScreen').classList.remove('hidden');
+      $('emailInput').value = '';
+      $('passwordInput').value = '';
+    }else{
+      $('authScreen').classList.remove('hidden');
+      $('dashboardScreen').classList.add('hidden');
+    }
+  });
+
+  /* ================= FETCH BILL ================= */
+  let currentMeter = null;
+  let currentBill = null;
+
+  $('fetchBillBtn').addEventListener('click', async () => {
+    const meter = $('meterInput').value.trim();
+    if(!meter){
+      showMessage('Please enter a meter number.', 'error');
+      return;
+    }
+    showLoading(true);
+    try{
+      const doc = await db.collection('bills').doc(meter).get();
+      if(!doc.exists){
+        $('billInfo').classList.remove('show');
+        showMessage('No bill found for that meter number.', 'error');
+        return;
+      }
+      const bill = doc.data();
+      currentMeter = meter;
+      currentBill = bill;
+
+      $('billMeter').textContent = meter;
+      $('billAmount').textContent = `₦${Number(bill.amount).toLocaleString()}`;
+      $('billDueDate').textContent = formatDate(bill.dueDate);
+
+      const statusEl = $('billStatus');
+      statusEl.textContent = bill.status;
+      statusEl.className = 'status-pill ' + (bill.status === 'paid' ? 'status-paid' : 'status-unpaid');
+
+      $('billInfo').classList.add('show');
+      $('payBillBtn').style.display = bill.status === 'paid' ? 'none' : 'flex';
+
+      if(bill.status === 'paid'){
+        showMessage('This bill has already been paid.', 'info');
+      }
+    }catch(err){
+      showMessage('Failed to fetch bill: ' + err.message, 'error');
+    }finally{
+      showLoading(false);
+    }
+  });
+
+  /* ================= PAY BILL ================= */
+  $('payBillBtn').addEventListener('click', async () => {
+    if(!currentMeter || !currentBill){
+      showMessage('Please fetch a bill first.', 'error');
+      return;
+    }
+    if(currentBill.status === 'paid'){
+      showMessage('This bill is already paid.', 'info');
+      return;
+    }
+
+    showLoading(true);
+    const timestamp = Date.now();
+    const paymentId = `${currentMeter}_${timestamp}`;
+
+    try{
+      await db.collection('payments').doc(paymentId).set({
+        meter: currentMeter,
+        status: 'success',
+        date: firebase.firestore.FieldValue.serverTimestamp(),
+        amount: currentBill.amount
+      });
+
+      await db.collection('bills').doc(currentMeter).update({
+        status: 'paid'
+      });
+
+      currentBill.status = 'paid';
+      $('billStatus').textContent = 'paid';
+      $('billStatus').className = 'status-pill status-paid';
+      $('payBillBtn').style.display = 'none';
+
+      $('rcMeter').textContent = currentMeter;
+      $('rcAmount').textContent = `₦${Number(currentBill.amount).toLocaleString()}`;
+      $('rcDate').textContent = formatDate(new Date());
+      $('rcRef').textContent = paymentId;
+      $('receiptStatusIcon').src = 'success.png';
+      $('receiptTitle').textContent = 'Payment Successful';
+
+      openModal('receiptModal');
+      showMessage('Payment completed successfully.', 'success');
+
+    }catch(err){
+      $('receiptStatusIcon').src = 'error.png';
+      $('receiptTitle').textContent = 'Payment Failed';
+      $('rcMeter').textContent = currentMeter;
+      $('rcAmount').textContent = `₦${Number(currentBill.amount).toLocaleString()}`;
+      $('rcDate').textContent = formatDate(new Date());
+      $('rcRef').textContent = '-';
+      openModal('receiptModal');
+      showMessage('Payment failed: ' + err.message, 'error');
+    }finally{
+      showLoading(false);
+    }
+  });
+
+  /* ================= HISTORY ================= */
+  $('navHistory').addEventListener('click', async () => {
+    if(!currentMeter){
+      showMessage('Fetch a bill first to view its payment history.', 'info');
+      return;
+    }
+    showLoading(true);
+    try{
+      const snap = await db.collection('payments')
+        .where('meter', '==', currentMeter)
+        .get();
+
+      const list = $('historyList');
+      if(snap.empty){
+        list.innerHTML = '<p style="color:var(--muted);font-size:0.9rem;">No payment history for this meter yet.</p>';
+      }else{
+        let items = [];
+        snap.forEach(doc => items.push(doc.data()));
+        items.sort((a,b) => (b.date?.seconds || 0) - (a.date?.seconds || 0));
+        list.innerHTML = items.map(p => `
+          <div class="history-item">
+            <span>${formatDate(p.date)}</span>
+            <span>₦${Number(p.amount).toLocaleString()}</span>
+            <span class="status-pill ${p.status === 'success' ? 'status-paid' : 'status-unpaid'}">${p.status}</span>
+          </div>
+        `).join('');
+      }
+      openModal('historyModal');
+    }catch(err){
+      showMessage('Failed to load history: ' + err.message, 'error');
+    }finally{
+      showLoading(false);
+    }
+  });
+
+  /* ================= PROFILE ================= */
+  $('navProfile').addEventListener('click', async () => {
+    if(!currentUser){ return; }
+    showLoading(true);
+    try{
+      const doc = await db.collection('users').doc(currentUser.email).get();
+      const data = doc.exists ? doc.data() : { name: '-', createdAt: null };
+      $('profName').textContent = data.name || '-';
+      $('profEmail').textContent = currentUser.email;
+      $('profCreated').textContent = formatDate(data.createdAt);
+      openModal('profileModal');
+    }catch(err){
+      showMessage('Failed to load profile: ' + err.message, 'error');
+    }finally{
+      showLoading(false);
+    }
+  });
+
+  /* ================= LOGOUT ================= */
+  $('navLogout').addEventListener('click', async () => {
+    showLoading(true);
+    try{
+      await auth.signOut();
+      currentMeter = null;
+      currentBill = null;
+      $('billInfo').classList.remove('show');
+      $('meterInput').value = '';
+      showMessage('You have been signed out.', 'info');
+    }catch(err){
+      showMessage('Failed to sign out: ' + err.message, 'error');
+    }finally{
+      showLoading(false);
+    }
+  });
+
+  /* ================= NOTIFICATION ICON ================= */
+  $('notifIcon').addEventListener('click', () => {
+    showMessage('You have no new notifications.', 'info');
+  });
+</script>
+</body>
+</html>
